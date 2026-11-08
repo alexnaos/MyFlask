@@ -1,0 +1,26 @@
+# Временные файлы Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+
+# Логи службы
+*.log
+service.log
+service-error.log
+
+# Архивы и бинарники
+*.zip
+nssm.exe
+nssm-2.24/
+
+# Окружение и секреты
+.venv/
+venv/
+.env
+
+# Временные файлы редакторов
+.vscode/
+.idea/
+.DS_Store

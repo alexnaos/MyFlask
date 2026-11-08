@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Резюме{% endblock %}
+{% block content %}
+<div class="card mt-4 shadow-sm">
+  <div class="card-header bg-dark text-white p-0">
+    <!-- Навигация по вкладкам -->
+    <ul class="nav nav-tabs card-header-tabs m-0" id="resumeTabs" role="tablist">
+      {% for key, info in resumes_info.items() %}
+      <li class="nav-item" role="presentation">
+        <button class="nav-link {% if key == active_tab %}active{% endif %} text-white" 
+                id="tab-{{ key }}" 
+                data-bs-toggle="tab" 
+                data-bs-target="#content-{{ key }}" 
+                type="button" 
+                role="tab" 
+                aria-controls="content-{{ key }}" 
+                aria-selected="{% if key == active_tab %}true{% else %}false{% endif %}">
+          {{ info.title }}
+        </button>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+  
+  <div class="card-body" style="background-color: #ffffff;">
+    <!-- Содержимое вкладок -->
+    <div class="tab-content" id="resumeTabsContent">
+      {% for key, html_content in resumes.items() %}
+      <div class="tab-pane fade {% if key == active_tab %}show active{% endif %}" 
+           id="content-{{ key }}" 
+           role="tabpanel" 
+           aria-labelledby="tab-{{ key }}">
+        <div style="color: #212529; font-size: 1.05rem; line-height: 1.6;">
+          {{ html_content | safe }}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}

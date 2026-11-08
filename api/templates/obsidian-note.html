@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}{{ title or "Заметка" }}{% endblock %}
+{% block content %}
+<div class="card mt-4">
+  <!-- Шапка карточки -->
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <!-- Убрали text-light, сделали текст темным и жирным -->
+    <span style="color: #212529; font-weight: bold; font-size: 1.2rem;">
+      {{ title if title else "Без названия" }}
+    </span>
+    <!-- Сделали кнопку темной, чтобы она была видна на светлом фоне -->
+    <a href="{{ url_for('home') }}" class="btn btn-sm btn-dark">← На главную</a>
+  </div>
+
+  <!-- Тело карточки -->
+  <div class="card-body" style="background-color: #ffffff;">
+    {% if date %}
+      <p style="color: #6c757d; font-size: 0.9em;">Дата: {{ date }}</p>
+    {% endif %}
+    
+    <!-- Текст заметки: жестко задан темный цвет, сохранены переносы -->
+    <div style="color: #212529; white-space: pre-wrap; font-size: 1.05rem; line-height: 1.6;">
+      {{ body | safe }}
+    </div>
+  </div>
+</div>
+{% endblock %}

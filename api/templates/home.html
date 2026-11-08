@@ -1,0 +1,126 @@
+{% extends "base.html" %} 
+{% block title %}Home{% endblock %} 
+{% block content %}
+
+<p class="text-info">👋 Добро пожаловать в мою цифровую обитель!</p>
+
+<p>
+  Я искренне рад, что вы заглянули в этот уголок интернета, где я делюсь своими интересами и увлечениями. Этот сайт — курируемая витрина моей работы, опыта и тех идей, которые меня вдохновляют. Устраивайтесь поудобнее и изучайте всё в своём темпе.
+</p>
+
+<p class="text-info">Обо мне</p>
+
+<p>
+  Я финансовый контроллер/аналитик и инженер с довольно уникальным бэкграундом. Проработав более 10 лет дипломированным бухгалтером (Chartered Accountant), я поддался своему любопытству и любви к технологиям. Меня привлекли динамичные вызовы и универсальность, которую открывает программирование на Python. Сейчас, когда мне немного за 30, я активно строю карьеру в сфере автоматизации финансов для клиентов и повышения прозрачности их финансовых данных.
+</p>
+
+<p>
+  Сочетая глубокую экспертизу в финансах с техническими знаниями, я помогаю клиентам по максимуму раскрыть потенциал их данных. От оптимизации конвейеров данных (data pipelines) до улучшения визуализации и проектирования надежной логики баз данных, которая выдержит проверку временем. Я создаю решения, которые качественно улучшают финансовые процессы, принятие решений и аналитику.
+</p>
+
+<div class="flex mb-3">
+  <a class="btn btn-primary bg-dark mx-1 text-light mt-2 border border-secondary" href="mailto:{{ email }}" target="_blank" rel="noopener noreferrer">
+    <span class="fa fa-envelope"></span> Email me
+  </a>
+  <a class="btn btn-primary bg-dark mx-1 text-light mt-2 border border-secondary" href="{{ github }}" target="_blank" rel="noopener noreferrer">
+    <span class="fa fa-github"></span>
+  </a>
+  <a class="btn btn-primary bg-dark mx-1 text-light mt-2 border border-secondary" href="{{ linkedin }}" target="_blank" rel="noopener noreferrer">
+    <span class="fa fa-linkedin"></span>
+  </a>
+  <a class="btn btn-primary bg-dark mx-1 text-light mt-2 border border-secondary" href="{{ twitter }}" target="_blank" rel="noopener noreferrer">
+    <span class="fa fa-twitter"></span>
+  </a>
+</div>
+
+<!-- Блок с заметками Obsidian -->
+<div class="card mt-4">
+  <div class="card-header">Заметки из Obsidian</div>
+  <div class="card-body p-0" style="max-height: 450px; overflow-y: auto;">
+      <!-- Добавили id="notesTable" для скрипта -->
+      <table id="notesTable" class="table table-dark table-hover mb-0" style="table-layout: fixed; width: 100%;">
+      <thead>
+        <tr>
+          <!-- Добавили onclick и курсор для сортировки -->
+          <th style="width: 60%; cursor: pointer;" onclick="sortTable(0)">Название ▲▼</th>
+          <th style="width: 25%; cursor: pointer;" onclick="sortTable(1)">Дата ▲▼</th>
+          <th style="width: 15%;">Открыть</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for note in notes %}
+        <tr>
+          <td style="word-wrap: break-word; white-space: normal;">
+            <a href="{{ url_for('obsidian_note', path=note.path) }}" style="text-decoration: none;">
+              {{ note.title }}
+            </a>
+          </td>
+          <td style="font-size: 0.85em;">{{ note.date }}</td>
+          <td>
+            <a href="{{ url_for('obsidian_note', path=note.path) }}" class="btn btn-sm btn-outline-secondary">Открыть</a>
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="3" class="text-center text-muted">Заметки не найдены. Проверьте путь к хранилищу Obsidian в config.ini</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>  
+  </div>
+</div>
+
+<!-- Скрипт сортировки -->
+<script>
+function sortTable(n) {
+  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+  table = document.getElementById("notesTable");
+  switching = true;
+  dir = "asc"; 
+  
+  while (switching) {
+    switching = false;
+    rows = table.rows;
+    
+    for (i = 1; i < (rows.length - 1); i++) {
+      shouldSwitch = false;
+      x = rows[i].getElementsByTagName("TD")[n];
+      y = rows[i + 1].getElementsByTagName("TD")[n];
+      
+      var xContent = x.textContent || x.innerText;
+      var yContent = y.textContent || y.innerText;
+      
+      // Очистка дат от кавычек для правильной сортировки
+      if (n === 1) {
+        xContent = xContent.replace(/['"]/g, '');
+        yContent = yContent.replace(/['"]/g, '');
+      }
+
+      if (dir == "asc") {
+        if (xContent.toLowerCase() > yContent.toLowerCase()) {
+          shouldSwitch = true;
+          break;
+        }
+      } else if (dir == "desc") {
+        if (xContent.toLowerCase() < yContent.toLowerCase()) {
+          shouldSwitch = true;
+          break;
+        }
+      }
+    }
+    
+    if (shouldSwitch) {
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+      switchcount ++;
+    } else {
+      if (switchcount == 0 && dir == "asc") {
+        dir = "desc";
+        switching = true;
+      }
+    }
+  }
+}
+</script>
+
+{% endblock %}
