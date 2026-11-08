@@ -72,7 +72,8 @@ OBSIDIAN_VAULT = r"C:\\YandexDisk\\Obsidian Vault"
 
 
 
-
 cd C:\Projects\MyFlask\api\static
 pandoc "C:\YandexDisk\Я_док\РезюмеЗолотовГИП.docx" -t markdown_strict --wrap=none --extract-media="images" -o "resume_dev.md"
+
+git init; git add .; git commit -m "Initial commit"; git branch -M main; git remote add origin https://github.com/alexnaos/MyFlask.git; git push -u origin main
 
