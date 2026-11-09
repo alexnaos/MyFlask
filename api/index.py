@@ -41,8 +41,18 @@ try:
         ):
             OBSIDIAN_VAULT = config_parser.get("configs", "obsidian_vault").strip()
             OBSIDIAN_VAULT = OBSIDIAN_VAULT.strip('"').strip("'")
+        if config_parser.has_section("configs"):
+            _publish_key = config_parser.get("configs", "obsidian_publish_key", fallback="").strip()
+            if _publish_key:
+                OBSIDIAN_PUBLISH_KEY = _publish_key
 except Exception:
     traceback.print_exc()
+
+
+# Имя ключа front matter, по которому определяются заметки для публикации в Obsidian.
+# Читается из config.ini (секция [configs], ключ obsidian_publish_key), по умолчанию "publish".
+# Пример front matter в заметке: publish: true
+OBSIDIAN_PUBLISH_KEY = "publish"
 
 
 def _scan_obsidian_vault(vault_path: str) -> list[dict]:
@@ -256,12 +266,21 @@ def published_posts(flatpages: FlatPages, vault_path: str | None = None) -> list
 
 def read_obsidian_notes(vault_path: str | None = None, limit: int = 10) -> list[dict]:
     """Read markdown notes from Obsidian vault.
-    Reads .md files from the vault directory, parses front matter,
-    and returns a list of note dictionaries with date, title, published status.
+    Reads .md files from the vault directory recursively (including nested folders),
+    parses front matter, and returns a list of note dictionaries.
+
+    Only notes with front matter key equal to ``true`` (by default ``publish``,
+    configurable via ``obsidian_publish_key`` in config.ini) are returned, e.g.:
+
+        ---
+        publish: true
+        title: Моя заметка
+        date: 2024-01-15
+        ---
 
     Args:
         vault_path: Path to Obsidian vault. If None, uses configured path.
-        limit: Maximum number of notes to return.
+        limit: Maximum number of notes to return. Use 0 to return all notes.
 
     Returns:
         List of dictionaries with keys: title, date, published, path, body
@@ -278,7 +297,7 @@ def read_obsidian_notes(vault_path: str | None = None, limit: int = 10) -> list[
         return notes
 
     try:
-        # Get all .md files recursively, excluding certain directories
+        # Get all .md files recursively, including nested folders
         md_files = list(vault_dir.rglob("*.md"))
 
         # Filter out files in .obsidian directory and other non-note directories
@@ -302,6 +321,10 @@ def read_obsidian_notes(vault_path: str | None = None, limit: int = 10) -> list[
             try:
                 metadata, body = _read_markdown_file(file_path)
 
+                # Отображаем только заметки с ключом публикации = true (из config.ini: obsidian_publish_key)
+                if not _is_truthy(metadata.get(OBSIDIAN_PUBLISH_KEY)):
+                    continue
+
                 # 1. Пытаемся взять title из метаданных
                 title = metadata.get("title", "").strip()
 
@@ -316,7 +339,7 @@ def read_obsidian_notes(vault_path: str | None = None, limit: int = 10) -> list[
                         title = first_line
 
                 # Use relative path from vault root for the path field
-                rel_path = file_path.relative_to(Path(OBSIDIAN_VAULT))
+                rel_path = file_path.relative_to(vault_dir)
                 note = {
                     "title": title,
                     "date": metadata.get("date", ""),
