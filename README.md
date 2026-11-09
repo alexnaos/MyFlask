@@ -88,3 +88,8 @@ MyFlask/
 
 cd C:\Projects\MyFlask\api\static
 pandoc "C:\YandexDisk\Я_док\РезюмеЗолотовГИП.docx" -t markdown_strict --wrap=none --extract-media="images" -o "resume_dev.md"
+
+
+alex@debian:~/convertx$ openssl rand -hex 32
+3c8e495e905ccb0483bf1790739e030ef5a58bba9d2039ffeadbad2496ed5fcf
+alex@debian:~/convertx$ 
