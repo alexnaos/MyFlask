@@ -19,6 +19,7 @@ nssm-2.24/
 .venv/
 venv/
 .env
+REPORT.md
 
 # Временные файлы редакторов
 .vscode/

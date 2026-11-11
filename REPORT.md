@@ -1,9 +1,6 @@
 # Отчет по настройке отображения заметок Obsidian на главной странице Flask-приложения
 
 
-Нужно добавить в функцию чтения заметок из obsidian_vault = C:\YandexDisk\Obsidian Vault отображение всех в т.ч. во вложенных папках
-
-
 
 .\nssm.exe restart MyFlaskApp     
 
