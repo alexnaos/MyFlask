@@ -497,12 +497,6 @@ def create_app() -> Flask:
             return app.response_class(status=404)
         return render_template("blog-post.html", post=page)
 
-    @app.get("/projects/")
-    def projects():
-        pages = [
-            page for page in flatpages if page.path.startswith(f"{PROJECT_DIRECTORY}/")
-        ]
-        return render_template("projects.html", projects=newest(pages))
 
     @app.post("/blog/search")
     def search_blog():
