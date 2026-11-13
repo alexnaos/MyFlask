@@ -563,6 +563,18 @@ def create_app() -> Flask:
         except Exception as e:
             traceback.print_exc()
             return f"Error reading note: {str(e)}", 500
+       
+    @app.route('/schematics')
+    def schematics():
+        return redirect(url_for('schematics_ats'))
+
+    @app.route('/schematics/ats')
+    def schematics_ats():
+        return render_template('ats_panel.html', current='ats')
+
+    @app.route('/schematics/shield')
+    def schematics_shield():
+        return render_template('shield.html', current='shield')
 
     @app.get("/robots.txt")
     def robots():
@@ -571,6 +583,7 @@ def create_app() -> Flask:
             mimetype="text/plain",
         )
 
+      
     @app.get("/sitemap.xml")
     def sitemap():
         urls = [

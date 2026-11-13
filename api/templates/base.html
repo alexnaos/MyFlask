@@ -83,6 +83,7 @@
             <!-- <a href="/about " class="nav-item nav-link" id="about ">about</a> -->
             <a href="/projects/" class="nav-item nav-link" id="projects">projects</a>
             <a href="{{ url_for('posts') }}" class="nav-item nav-link" id="blog">blog</a>
+            <a href="/schematics/ats" class="nav-item nav-link {% if request.path.startswith('/schematics') %}active{% endif %}">Схемы щита</a>
           </div>
         </div>
       </nav>

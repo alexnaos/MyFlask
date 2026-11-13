@@ -46,9 +46,31 @@
  .mnt{width:100%;border-collapse:collapse;font-size:12px}
  .mnt th,.mnt td{padding:7px 9px;text-align:left;border-bottom:1px solid var(--bd)}
  .mnt th{color:var(--mut);font-weight:500}
+
+    @media (prefers-reduced-motion: reduce) {
+      .running, .live-wire { animation: none !important; }
+    }
+</style>
 </style>
 </head>
 <body>
+    <nav style="display:flex;gap:22px;align-items:center;padding:12px 20px;
+                background:#141722;border:1px solid #242936;border-radius:8px;
+                margin:0 auto 20px;max-width:1300px;font:13px/1.4 system-ui;">
+      <a href="/" style="color:#959da5;text-decoration:none;">← На главную</a>
+      <a href="{{ url_for('schematics_ats') }}"
+         style="text-decoration:none;
+                color:{{ '#fff' if current == 'ats' else '#959da5' }};
+                font-weight:{{ '600' if current == 'ats' else '400' }};">
+         Схема АВР + реле + GX16
+      </a>
+      <a href="{{ url_for('schematics_shield') }}"
+         style="text-decoration:none;
+                color:{{ '#fff' if current == 'shield' else '#959da5' }};
+                font-weight:{{ '600' if current == 'shield' else '400' }};">
+         Щиток: все соединения
+      </a>
+    </nav>
 <div class="wrap">
  <h1>Щиток: схема всех соединений и подключение через АВР</h1>
  <p class="sub">Вкладка 1 — распределительный щиток со всеми соединениями (L / N / PE). Вкладка 2 — тот же щиток, запитанный через АВР (Город / Генератор).</p>
@@ -357,7 +379,7 @@
     <text x="685" y="58" class="mt" text-anchor="middle">Пром. реле</text>
     <text x="685" y="76" class="ml" text-anchor="middle">(Катушка 220В)</text>
     <circle class="node nDRY" cx="630" cy="130" r="10"/><text x="630" y="133" class="wl" fill="#fff" text-anchor="middle">11</text>
-    <circle class="node nDRY" cx="690" cy="130" r="10"/><text x="690" y="133" class="wl" fill="#fff" text-anchor="middle">14</text>
+    <circle class="node nDRY" cx="690" cy="130" r="10"/><text x="690" y="133" class="wl" fill="#fff" text-anchor="middle">12</text>
     <circle class="node nCTRL" cx="750" cy="130" r="10"/><text x="750" y="133" class="wl" fill="#fff" text-anchor="middle">A1</text>
     <circle class="node nCTRL" cx="750" cy="24" r="10"/><text x="750" y="27" class="wl" fill="#fff" text-anchor="middle">A2</text>
     <text x="600" y="170" class="ml" fill="#a142f4">«Сухой контакт» NC (11-14)</text>
@@ -457,10 +479,10 @@
       <span><i class="sw" style="background:#3b82f6"></i>Ноль N</span>
       <span><i class="sw" style="background:#ff9900"></i>Фаза Генератора</span>
       <span><i class="sw" style="background:#fbbc05"></i>Контроль 220В / катушка</span>
-      <span><i class="sw" style="background:#a142f4"></i>«Сухой контакт» NC (старт)</span>
+      <span><i class="sw" style="background:#a142f4"></i>«Сухой контакт» NC (11-12)</span>
       <span><i class="sw" style="background:#22c55e"></i>Земля PE</span>
     </div>
-    <p class="sub" style="margin-top:12px;">Логика: при потере города катушка реле обесточивается → нормально-замкнутый контакт <b>11-14</b> замыкает «сухой контакт» → генератор получает сигнал старта. Питание щита при этом переключается АВР с Входа А (город) на Вход B (генератор).</p>
+    <p class="sub" style="margin-top:12px;">Логика: при потере города катушка реле обесточивается → нормально-замкнутый контакт <b>11-12</b> замыкает «сухой контакт» → генератор получает сигнал старта. Питание щита при этом переключается АВР с Входа А (город) на Вход B (генератор).</p>
    </div>
  </div>
 

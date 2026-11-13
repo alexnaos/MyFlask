@@ -100,9 +100,31 @@
         .live-wire { stroke-dasharray: 5; animation: none; }
         .running { animation: pulse 5s linear infinite; }
         @keyframes pulse { to { stroke-dashoffset: -50; } }
-    </style>
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .running, .live-wire { animation: none !important; }
+    }
+</style>
 </head>
 <body>
+    <nav style="display:flex;gap:22px;align-items:center;padding:12px 20px;
+                background:#141722;border:1px solid #242936;border-radius:8px;
+                margin:0 auto 20px;max-width:1300px;font:13px/1.4 system-ui;">
+      <a href="/" style="color:#959da5;text-decoration:none;">← На главную</a>
+      <a href="{{ url_for('schematics_ats') }}"
+         style="text-decoration:none;
+                color:{{ '#fff' if current == 'ats' else '#959da5' }};
+                font-weight:{{ '600' if current == 'ats' else '400' }};">
+         Схема АВР + реле + GX16
+      </a>
+      <a href="{{ url_for('schematics_shield') }}"
+         style="text-decoration:none;
+                color:{{ '#fff' if current == 'shield' else '#959da5' }};
+                font-weight:{{ '600' if current == 'shield' else '400' }};">
+         Щиток: все соединения
+      </a>
+    </nav>
 
 <div class="container">
     <header>
@@ -119,7 +141,7 @@
                     <button id="btnStateGen" onclick="changeState('gen')">Режим: Работа от генератора (Авария)</button>
                 </div>
 
-                <svg width="880" height="640" viewBox="0 0 880 640" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg viewBox="0 0 880 640" style="width:100%;height:auto;max-width:880px;" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <rect width="880" height="640" fill="#08090c" rx="8"/>
 
                     <!-- МОДУЛЬ: Сеть здания -->
