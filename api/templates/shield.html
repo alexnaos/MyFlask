@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Щиток: схема соединений + АВР</title>
+<style>
+ :root{
+  --bg:#0b0c10; --card:#141722; --bd:#242936; --txt:#f8f9fa; --mut:#959da5;
+  --L:#ef4444; --N:#3b82f6; --PE:#22c55e; --GEN:#ff9900; --CTRL:#fbbc05; --DRY:#a142f4;
+ }
+ *{box-sizing:border-box}
+ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--txt);margin:0;padding:20px}
+ .wrap{max-width:1280px;margin:0 auto}
+ h1{font-size:22px;margin:0 0 4px}
+ .sub{color:var(--mut);font-size:13px;margin:0 0 18px}
+ .tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+ .tab-btn{background:#1a1d26;border:1px solid var(--bd);color:var(--mut);padding:10px 18px;border-radius:8px;cursor:pointer;font-weight:600;font-size:13px}
+ .tab-btn:hover{color:#fff}
+ .tab-btn.active{background:#1a73e8;border-color:#1a73e8;color:#fff}
+ .pane{display:none}
+ .pane.active{display:block}
+ .card{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:16px;margin-bottom:16px}
+ .legend{display:flex;flex-wrap:wrap;gap:14px;font-size:12px;margin-top:12px}
+ .legend span{display:flex;align-items:center;gap:6px}
+ .sw{width:18px;height:10px;border-radius:2px;display:inline-block}
+ svg{display:block;width:100%;height:auto;background:#08090c;border-radius:8px}
+ .wire{fill:none;stroke-linecap:round;stroke-linejoin:round}
+ .running{stroke-dasharray:7 5;animation:flow .7s linear infinite}
+ @keyframes flow{to{stroke-dashoffset:-12}}
+ .wL{stroke:var(--L);stroke-width:3.5}
+ .wN{stroke:var(--N);stroke-width:3.5}
+ .wPE{stroke:var(--PE);stroke-width:4}
+ .wGEN{stroke:var(--GEN);stroke-width:3.5}
+ .wCTRL{stroke:var(--CTRL);stroke-width:2.5}
+ .wDRY{stroke:var(--DRY);stroke-width:2.5}
+ .wire:hover{stroke-width:5.5;cursor:pointer}
+ .node{stroke:#08090c;stroke-width:1.5}
+ .nL{fill:var(--L)}.nN{fill:var(--N)}.nPE{fill:var(--PE)}.nGEN{fill:var(--GEN)}.nCTRL{fill:var(--CTRL)}.nDRY{fill:var(--DRY)}
+ .mbox{fill:#171a24;stroke:#2a3040;stroke-width:1.5}
+ .mt{fill:#fff;font:600 12px sans-serif}
+ .ma{font:700 13px sans-serif}
+ .ml{fill:#9aa4b2;font:500 10px sans-serif}
+ .wl{font:600 10px sans-serif}
+ .rowlab{fill:#6c7086;font:700 11px sans-serif;letter-spacing:.5px}
+ .mnt{width:100%;border-collapse:collapse;font-size:12px}
+ .mnt th,.mnt td{padding:7px 9px;text-align:left;border-bottom:1px solid var(--bd)}
+ .mnt th{color:var(--mut);font-weight:500}
+</style>
+</head>
+<body>
+<div class="wrap">
+ <h1>Щиток: схема всех соединений и подключение через АВР</h1>
+ <p class="sub">Вкладка 1 — распределительный щиток со всеми соединениями (L / N / PE). Вкладка 2 — тот же щиток, запитанный через АВР (Город / Генератор).</p>
+ <div class="tabs">
+   <button class="tab-btn active" data-t="p1">1 · Щиток — все соединения</button>
+   <button class="tab-btn" data-t="p2">2 · Щиток + АВР (Город/Генератор)</button>
+ </div>
+
+ <!-- ================= ВКЛАДКА 1: ЩИТОК ================= -->
+ <div class="pane active" id="p1">
+  <div class="card">
+   <svg viewBox="0 0 1200 660" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="660" fill="#08090c" rx="8"/>
+    <!-- ===== Ввод и вводной автомат ===== -->
+    <text x="14" y="24" class="wl" fill="#f8f9fa">Вводной кабель 3×6 (L+N+PE)</text>
+    <path class="wire wL"  d="M92 30 L92 56"/>  <circle class="node nL"  cx="92"  cy="30" r="4"/>
+    <path class="wire wN"  d="M140 30 L140 56"/><circle class="node nN"  cx="140" cy="30" r="4"/>
+    <path class="wire wPE" d="M48 30 L48 620"/>  <circle class="node nPE" cx="48"  cy="30" r="4"/>
+    <text x="52" y="640" class="wl" fill="#22c55e">PE</text>
+    <rect class="mbox" x="58" y="56" width="130" height="50" rx="4"/>
+    <text x="123" y="76"  class="mt" text-anchor="middle">QF0</text>
+    <text x="123" y="91"  class="ma" fill="#ef4444" text-anchor="middle">25 А</text>
+    <text x="123" y="102" class="ml" text-anchor="middle">Вводной 2P</text>
+    <!-- QF0 -> шины -->
+    <path class="wire wL" d="M92 106 L92 130"/> <circle class="node nL" cx="92" cy="130" r="4"/>
+    <path class="wire wN" d="M140 106 L140 152"/><circle class="node nN" cx="140" cy="152" r="4"/>
+    <!-- Вертикальные шины щита -->
+    <path class="wire wL"  d="M92 130 L92 620"  stroke-width="5"/>
+    <path class="wire wN"  d="M140 152 L140 620" stroke-width="5"/>
+    <path class="wire wPE" d="M48 160 L48 620"   stroke-width="4"/>
+    <text x="70" y="126" class="wl" fill="#ef4444" text-anchor="end">ШИНА L</text>
+    <text x="150" y="148" class="wl" fill="#3b82f6">ШИНА N</text>
+    <text x="58" y="176" class="wl" fill="#22c55e">ШИНА PE</text>
+    <!-- ===== РЯД 1: одиночные линии ===== -->
+    <text x="196" y="150" class="rowlab">РЯД 1 · ГРУППОВЫЕ ЛИНИИ</text>
+    <path class="wire wL" d="M92 158 L794 158"/>
+    <path class="wire wN" d="M140 172 L826 172"/>
+    <circle class="node nL" cx="92"  cy="158" r="4"/>
+    <circle class="node nN" cx="140" cy="172" r="4"/>
+
+    <!-- QF1 -->
+    <path class="wire wL" d="M244 158 L244 186"/><circle class="node nL" cx="244" cy="158" r="3.5"/>
+    <rect class="mbox" x="202" y="186" width="84" height="44" rx="4"/>
+    <text x="244" y="201" class="mt" text-anchor="middle">QF1</text>
+    <text x="244" y="215" class="ma" fill="#ef4444" text-anchor="middle">10 А</text>
+    <text x="244" y="226" class="ml" text-anchor="middle">Свет</text>
+    <path class="wire wL"  d="M244 230 L244 238"/>
+    <rect class="mbox" x="198" y="238" width="104" height="22" rx="4" fill="#0f1420"/>
+    <text x="250" y="253" class="ml" text-anchor="middle">→ Свет</text>
+    <path class="wire wN"  d="M306 172 L306 249 L302 249"/>
+    <path class="wire wPE" d="M250 260 L250 284"/>
+
+    <!-- QF2 -->
+    <path class="wire wL" d="M348 158 L348 186"/><circle class="node nL" cx="348" cy="158" r="3.5"/>
+    <rect class="mbox" x="306" y="186" width="84" height="44" rx="4"/>
+    <text x="348" y="201" class="mt" text-anchor="middle">QF2</text>
+    <text x="348" y="215" class="ma" fill="#ef4444" text-anchor="middle">16 А</text>
+    <text x="348" y="226" class="ml" text-anchor="middle">Коридор</text>
+    <path class="wire wL"  d="M348 230 L348 238"/>
+    <rect class="mbox" x="302" y="238" width="104" height="22" rx="4" fill="#0f1420"/>
+    <text x="354" y="253" class="ml" text-anchor="middle">→ Коридор</text>
+    <path class="wire wN"  d="M410 172 L410 249 L406 249"/>
+    <path class="wire wPE" d="M354 260 L354 284"/>
+    <!-- QF3 -->
+    <path class="wire wL" d="M452 158 L452 186"/><circle class="node nL" cx="452" cy="158" r="3.5"/>
+    <rect class="mbox" x="410" y="186" width="84" height="44" rx="4"/>
+    <text x="452" y="201" class="mt" text-anchor="middle">QF3</text>
+    <text x="452" y="215" class="ma" fill="#ef4444" text-anchor="middle">16 А</text>
+    <text x="452" y="226" class="ml" text-anchor="middle">Стир.маш</text>
+    <path class="wire wL"  d="M452 230 L452 238"/>
+    <rect class="mbox" x="406" y="238" width="104" height="22" rx="4" fill="#0f1420"/>
+    <text x="458" y="253" class="ml" text-anchor="middle">→ Стир.маш</text>
+    <path class="wire wN"  d="M514 172 L514 249 L510 249"/>
+    <path class="wire wPE" d="M458 260 L458 284"/>
+
+    <!-- QF4 -->
+    <path class="wire wL" d="M556 158 L556 186"/><circle class="node nL" cx="556" cy="158" r="3.5"/>
+    <rect class="mbox" x="514" y="186" width="84" height="44" rx="4"/>
+    <text x="556" y="201" class="mt" text-anchor="middle">QF4</text>
+    <text x="556" y="215" class="ma" fill="#ef4444" text-anchor="middle">16 А</text>
+    <text x="556" y="226" class="ml" text-anchor="middle">Бойлер</text>
+    <path class="wire wL"  d="M556 230 L556 238"/>
+    <rect class="mbox" x="510" y="238" width="104" height="22" rx="4" fill="#0f1420"/>
+    <text x="562" y="253" class="ml" text-anchor="middle">→ Бойлер</text>
+    <path class="wire wN"  d="M618 172 L618 249 L614 249"/>
+    <path class="wire wPE" d="M562 260 L562 284"/>
+
+    <!-- Резерв 1 -->
+    <path class="wire wL" d="M660 158 L660 186"/><circle class="node nL" cx="660" cy="158" r="3.5"/>
+    <rect class="mbox" x="618" y="186" width="84" height="44" rx="4"/>
+    <text x="660" y="201" class="mt" text-anchor="middle">Резерв</text>
+    <text x="660" y="215" class="ma" fill="#ef4444" text-anchor="middle">16 А</text>
+    <text x="660" y="226" class="ml" text-anchor="middle">свободно</text>
+    <path class="wire wL"  d="M660 230 L660 238"/>
+    <rect class="mbox" x="614" y="238" width="104" height="22" rx="4" fill="#0f1420"/>
+    <text x="666" y="253" class="ml" text-anchor="middle">→ резерв</text>
+    <path class="wire wN"  d="M722 172 L722 249 L718 249"/>
+
+    <!-- Резерв 2 -->
+    <path class="wire wL" d="M764 158 L764 186"/><circle class="node nL" cx="764" cy="158" r="3.5"/>
+    <rect class="mbox" x="722" y="186" width="84" height="44" rx="4"/>
+    <text x="764" y="201" class="mt" text-anchor="middle">Резерв</text>
+    <text x="764" y="215" class="ma" fill="#ef4444" text-anchor="middle">16 А</text>
+    <text x="764" y="226" class="ml" text-anchor="middle">свободно</text>
+    <path class="wire wL"  d="M764 230 L764 238"/>
+    <rect class="mbox" x="718" y="238" width="104" height="22" rx="4" fill="#0f1420"/>
+    <text x="770" y="253" class="ml" text-anchor="middle">→ резерв</text>
+    <path class="wire wN"  d="M826 172 L826 249 L822 249"/>
+
+    <!-- PE-сборка ряда 1 -->
+    <path class="wire wPE" d="M48 284 L830 284"/>
+    <!-- ===== РЯД 2: УЗО (QD1, QD2) ===== -->
+    <text x="196" y="294" class="rowlab">РЯД 2 · УЗО 30мА (2P)</text>
+    <path class="wire wL" d="M92 300 L620 300"/>
+    <path class="wire wN" d="M140 312 L620 312"/>
+    <circle class="node nL" cx="92"  cy="300" r="4"/>
+    <circle class="node nN" cx="140" cy="312" r="4"/>
+
+    <!-- QD1 УЗО -->
+    <path class="wire wL" d="M356 300 L356 330"/>
+    <path class="wire wN" d="M388 312 L388 330"/>
+    <rect class="mbox" x="330" y="330" width="84" height="48" rx="4" stroke="#22c55e"/>
+    <text x="372" y="346" class="mt" text-anchor="middle">QD1</text>
+    <text x="372" y="360" class="ma" fill="#22c55e" text-anchor="middle">УЗО 30мА</text>
+    <text x="372" y="373" class="ml" text-anchor="middle">Защита линий</text>
+    <path class="wire wL"  d="M356 378 L356 404"/>
+    <path class="wire wN"  d="M388 378 L388 404"/>
+    <rect class="mbox" x="330" y="404" width="84" height="22" rx="4" fill="#0f1420"/>
+    <text x="372" y="419" class="ml" text-anchor="middle">→ Влаж.зоны</text>
+    <path class="wire wPE" d="M372 426 L372 440"/>
+
+    <!-- QD2 УЗО -->
+    <path class="wire wL" d="M556 300 L556 330"/>
+    <path class="wire wN" d="M588 312 L588 330"/>
+    <rect class="mbox" x="530" y="330" width="84" height="48" rx="4" stroke="#22c55e"/>
+    <text x="572" y="346" class="mt" text-anchor="middle">QD2</text>
+    <text x="572" y="360" class="ma" fill="#22c55e" text-anchor="middle">УЗО 30мА</text>
+    <text x="572" y="373" class="ml" text-anchor="middle">Защита линий</text>
+    <path class="wire wL"  d="M556 378 L556 404"/>
+    <path class="wire wN"  d="M588 378 L588 404"/>
+    <rect class="mbox" x="530" y="404" width="84" height="22" rx="4" fill="#0f1420"/>
+    <text x="572" y="419" class="ml" text-anchor="middle">→ Влаж.зоны</text>
+    <path class="wire wPE" d="M572 426 L572 440"/>
+
+    <!-- PE-сборка ряда 2 -->
+    <path class="wire wPE" d="M48 440 L620 440"/>
+    <!-- ===== РЯД 3: ДИФ с подгруппами ===== -->
+    <text x="196" y="458" class="rowlab">РЯД 3 · ДИФ + ПОДГРУППЫ АВТОМАТОВ</text>
+    <path class="wire wL" d="M92 464 L850 464"/>
+    <path class="wire wN" d="M140 476 L850 476"/>
+    <circle class="node nL" cx="92"  cy="464" r="4"/>
+    <circle class="node nN" cx="140" cy="476" r="4"/>
+
+    <!-- QFD1 ДИФ (защита левой группы) -->
+    <path class="wire wL" d="M200 464 L200 490"/>
+    <path class="wire wN" d="M280 476 L280 490"/>
+    <rect class="mbox" x="170" y="490" width="140" height="42" rx="4" stroke="#a855f7"/>
+    <text x="240" y="506" class="mt" text-anchor="middle">QFD1 · ДИФ</text>
+    <text x="240" y="520" class="ma" fill="#a855f7" text-anchor="middle">30мА · 2P</text>
+    <path class="wire wL" d="M200 532 L200 548"/>
+    <path class="wire wN" d="M280 532 L280 560"/>
+
+    <!-- QFD2 ДИФ (защита правой группы) -->
+    <path class="wire wL" d="M620 464 L620 490"/>
+    <path class="wire wN" d="M700 476 L700 490"/>
+    <rect class="mbox" x="590" y="490" width="140" height="42" rx="4" stroke="#a855f7"/>
+    <text x="660" y="506" class="mt" text-anchor="middle">QFD2 · ДИФ</text>
+    <text x="660" y="520" class="ma" fill="#a855f7" text-anchor="middle">30мА · 2P</text>
+    <path class="wire wL" d="M620 532 L620 548"/>
+    <path class="wire wN" d="M700 532 L700 560"/>
+
+    <!-- Под-магистрали групп (выход ДИФ) -->
+    <path class="wire wL" d="M200 548 L510 548"/>
+    <path class="wire wN" d="M280 560 L470 560"/>
+    <path class="wire wL" d="M620 548 L850 548"/>
+    <path class="wire wN" d="M700 560 L840 560"/>
+    <text x="300" y="544" class="ml">выход ДИФ1 → группа</text>
+    <text x="720" y="544" class="ml">выход ДИФ2 → группа</text>
+    <!-- Подгруппа ЛЕВАЯ (от QFD1): QF5..QF8 -->
+    <path class="wire wL" d="M222 548 L222 572"/><circle class="node nL" cx="222" cy="548" r="3.5"/>
+    <path class="wire wL" d="M300 548 L300 572"/><circle class="node nL" cx="300" cy="548" r="3.5"/>
+    <path class="wire wL" d="M378 548 L378 572"/><circle class="node nL" cx="378" cy="548" r="3.5"/>
+    <path class="wire wL" d="M456 548 L456 572"/><circle class="node nL" cx="456" cy="548" r="3.5"/>
+
+    <rect class="mbox" x="184" y="572" width="76" height="40" rx="4"/>
+    <text x="222" y="586" class="mt" text-anchor="middle">QF5</text>
+    <text x="222" y="600" class="ma" fill="#ef4444" text-anchor="middle">16 А</text>
+    <text x="222" y="610" class="ml" text-anchor="middle">Комн.бол1</text>
+    <path class="wire wL"  d="M222 612 L222 620"/>
+    <rect class="mbox" x="180" y="620" width="88" height="18" rx="4" fill="#0f1420"/>
+    <text x="224" y="633" class="ml" text-anchor="middle">→ Комн.бол1</text>
+    <path class="wire wN"  d="M270 560 L270 629 L268 629"/>
+
+    <rect class="mbox" x="262" y="572" width="76" height="40" rx="4"/>
+    <text x="300" y="586" class="mt" text-anchor="middle">QF6</text>
+    <text x="300" y="600" class="ma" fill="#ef4444" text-anchor="middle">16 А</text>
+    <text x="300" y="610" class="ml" text-anchor="middle">Комн.бол2</text>
+    <path class="wire wL"  d="M300 612 L300 620"/>
+    <rect class="mbox" x="258" y="620" width="88" height="18" rx="4" fill="#0f1420"/>
+    <text x="302" y="633" class="ml" text-anchor="middle">→ Комн.бол2</text>
+    <path class="wire wN"  d="M348 560 L348 629 L346 629"/>
+
+    <rect class="mbox" x="340" y="572" width="76" height="40" rx="4"/>
+    <text x="378" y="586" class="mt" text-anchor="middle">QF7</text>
+    <text x="378" y="600" class="ma" fill="#ef4444" text-anchor="middle">16 А</text>
+    <text x="378" y="610" class="ml" text-anchor="middle">Прихожая</text>
+    <path class="wire wL"  d="M378 612 L378 620"/>
+    <rect class="mbox" x="336" y="620" width="88" height="18" rx="4" fill="#0f1420"/>
+    <text x="380" y="633" class="ml" text-anchor="middle">→ Прихожая</text>
+    <path class="wire wN"  d="M426 560 L426 629 L424 629"/>
+
+    <rect class="mbox" x="418" y="572" width="76" height="40" rx="4"/>
+    <text x="456" y="586" class="mt" text-anchor="middle">QF8</text>
+    <text x="456" y="600" class="ma" fill="#ef4444" text-anchor="middle">16 А</text>
+    <text x="456" y="610" class="ml" text-anchor="middle">Насос</text>
+    <path class="wire wL"  d="M456 612 L456 620"/>
+    <rect class="mbox" x="414" y="620" width="88" height="18" rx="4" fill="#0f1420"/>
+    <text x="458" y="633" class="ml" text-anchor="middle">→ Насос сарай</text>
+    <path class="wire wN"  d="M504 560 L504 629 L502 629"/>
+    <!-- Подгруппа ПРАВАЯ (от QFD2): QF9..QF11 -->
+    <path class="wire wL" d="M642 548 L642 572"/><circle class="node nL" cx="642" cy="548" r="3.5"/>
+    <path class="wire wL" d="M720 548 L720 572"/><circle class="node nL" cx="720" cy="548" r="3.5"/>
+    <path class="wire wL" d="M798 548 L798 572"/><circle class="node nL" cx="798" cy="548" r="3.5"/>
+
+    <rect class="mbox" x="604" y="572" width="76" height="40" rx="4"/>
+    <text x="642" y="586" class="mt" text-anchor="middle">QF9</text>
+    <text x="642" y="600" class="ma" fill="#ef4444" text-anchor="middle">25 А</text>
+    <text x="642" y="610" class="ml" text-anchor="middle">Плита</text>
+    <path class="wire wL"  d="M642 612 L642 620"/>
+    <rect class="mbox" x="600" y="620" width="88" height="18" rx="4" fill="#0f1420"/>
+    <text x="644" y="633" class="ml" text-anchor="middle">→ Кухня плита</text>
+    <path class="wire wN"  d="M690 560 L690 629 L688 629"/>
+
+    <rect class="mbox" x="682" y="572" width="76" height="40" rx="4"/>
+    <text x="720" y="586" class="mt" text-anchor="middle">QF10</text>
+    <text x="720" y="600" class="ma" fill="#ef4444" text-anchor="middle">16 А</text>
+    <text x="720" y="610" class="ml" text-anchor="middle">Фартук</text>
+    <path class="wire wL"  d="M720 612 L720 620"/>
+    <rect class="mbox" x="678" y="620" width="88" height="18" rx="4" fill="#0f1420"/>
+    <text x="722" y="633" class="ml" text-anchor="middle">→ Кухня фартук</text>
+    <path class="wire wN"  d="M768 560 L768 629 L766 629"/>
+
+    <rect class="mbox" x="760" y="572" width="76" height="40" rx="4"/>
+    <text x="798" y="586" class="mt" text-anchor="middle">QF11</text>
+    <text x="798" y="600" class="ma" fill="#ef4444" text-anchor="middle">16 А</text>
+    <text x="798" y="610" class="ml" text-anchor="middle">Комн.мал</text>
+    <path class="wire wL"  d="M798 612 L798 620"/>
+    <rect class="mbox" x="756" y="620" width="88" height="18" rx="4" fill="#0f1420"/>
+    <text x="800" y="633" class="ml" text-anchor="middle">→ Комн.мал.роз.</text>
+    <path class="wire wN"  d="M846 560 L846 629 L844 629"/>
+
+    <!-- PE-сборка ряда 3 -->
+    <path class="wire wPE" d="M48 645 L850 645"/>
+   </svg>
+    <div class="legend">
+      <span><i class="sw" style="background:#ef4444"></i>Фаза L</span>
+      <span><i class="sw" style="background:#3b82f6"></i>Ноль N</span>
+      <span><i class="sw" style="background:#22c55e"></i>Земля PE</span>
+      <span><i class="sw" style="background:#a855f7"></i>ДИФ (диф. автомат)</span>
+      <span><i class="sw" style="background:#1e4620"></i>Шина PE</span>
+    </div>
+   </div>
+
+   <div class="card">
+     <div class="section-title" style="font-size:13px;font-weight:bold;text-transform:uppercase;color:#959da5;margin-bottom:10px;">Монтажная карта «Жила → Контакт»</div>
+     <table class="mnt">
+       <tr><th>Откуда</th><th>Куда</th><th>Сигнал</th></tr>
+       <tr><td>Ввод L</td><td>QF0 (1)</td><td>Фаза ввод</td></tr>
+       <tr><td>Ввод N</td><td>QF0 (3)</td><td>Ноль ввод</td></tr>
+       <tr><td>QF0 (2)</td><td>Кросс-модуль · Шина L</td><td>Фаза</td></tr>
+       <tr><td>QF0 (4)</td><td>Кросс-модуль · Шина N</td><td>Ноль</td></tr>
+       <tr><td>Ввод PE</td><td>Шина PE</td><td>Заземление</td></tr>
+       <tr><td>Шина L</td><td>QF1..QF11 (верх. клеммы)</td><td>Фаза на линии</td></tr>
+       <tr><td>Шина N</td><td>Кросс-модуль (N нагрузок)</td><td>Ноль на нагрузки</td></tr>
+       <tr><td>QFD1 / QFD2 (выход)</td><td>Подгруппы QF5–QF8 / QF9–QF11</td><td>Фаза после ДИФ</td></tr>
+       <tr><td>PE всех модулей и нагрузок</td><td>Шина PE</td><td>Заземление</td></tr>
+     </table>
+   </div>
+ </div>
+ <!-- ================= ВКЛАДКА 2: ЩИТОК + АВР ================= -->
+ <div class="pane" id="p2">
+  <div class="card">
+   <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
+     <button id="aCity" class="tab-btn active" style="background:#1a73e8;border-color:#1a73e8;color:#fff" onclick="avr('city')">Режим: Город (Норма)</button>
+     <button id="aGen"  class="tab-btn" onclick="avr('gen')">Режим: Генератор (Авария)</button>
+   </div>
+   <svg viewBox="0 0 1200 660" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="660" fill="#08090c" rx="8"/>
+
+    <!-- ===== Источники ===== -->
+    <!-- Город -->
+    <rect class="mbox" x="24" y="30" width="150" height="70" rx="6"/>
+    <text x="99" y="60" class="mt" text-anchor="middle">Городская сеть</text>
+    <text x="99" y="80" class="ma" fill="#ef4444" text-anchor="middle">220В / L+N+PE</text>
+    <!-- Генератор -->
+    <rect class="mbox" x="24" y="470" width="150" height="120" rx="6" stroke="#ff9900"/>
+    <text x="99" y="505" class="mt" text-anchor="middle">Инверторный</text>
+    <text x="99" y="522" class="mt" text-anchor="middle">генератор</text>
+    <text x="99" y="545" class="ma" fill="#ff9900" text-anchor="middle">GX16-5</text>
+    <!-- Автомат 2А контроля -->
+    <rect class="mbox" x="250" y="40" width="90" height="60" rx="6" stroke="#fbbc05"/>
+    <text x="295" y="70" class="mt" text-anchor="middle">Автомат</text>
+    <text x="295" y="88" class="ma" fill="#fbbc05" text-anchor="middle">2А 2P</text>
+    <!-- Промежуточное реле -->
+    <rect class="mbox" x="600" y="30" width="170" height="120" rx="6" stroke="#a142f4"/>
+    <text x="685" y="58" class="mt" text-anchor="middle">Пром. реле</text>
+    <text x="685" y="76" class="ml" text-anchor="middle">(Катушка 220В)</text>
+    <circle class="node nDRY" cx="630" cy="130" r="10"/><text x="630" y="133" class="wl" fill="#fff" text-anchor="middle">11</text>
+    <circle class="node nDRY" cx="690" cy="130" r="10"/><text x="690" y="133" class="wl" fill="#fff" text-anchor="middle">14</text>
+    <circle class="node nCTRL" cx="750" cy="130" r="10"/><text x="750" y="133" class="wl" fill="#fff" text-anchor="middle">A1</text>
+    <circle class="node nCTRL" cx="750" cy="24" r="10"/><text x="750" y="27" class="wl" fill="#fff" text-anchor="middle">A2</text>
+    <text x="600" y="170" class="ml" fill="#a142f4">«Сухой контакт» NC (11-14)</text>
+
+    <!-- Блок АВР TOMZN -->
+    <rect class="mbox" x="380" y="220" width="240" height="220" rx="8"/>
+    <text x="500" y="252" class="mt" text-anchor="middle">TOMZN TOQ5-63/2P</text>
+    <rect x="405" y="280" width="70" height="34" rx="4" fill="#0d0e12"/><text x="440" y="301" class="ma" fill="#1a73e8" text-anchor="middle">Вход А</text>
+    <rect x="525" y="280" width="70" height="34" rx="4" fill="#0d0e12"/><text x="560" y="301" class="ma" fill="#ff9900" text-anchor="middle">Вход B</text>
+    <rect x="405" y="370" width="52" height="30" rx="3" fill="#242936"/><text x="431" y="389" class="wl" fill="#fff" text-anchor="middle">AR</text>
+    <rect x="540" y="370" width="52" height="30" rx="3" fill="#242936"/><text x="566" y="389" class="wl" fill="#fff" text-anchor="middle">AN</text>
+    <text x="500" y="362" class="ml" text-anchor="middle">→ щит (AR/AN)</text>
+
+    <!-- Разъём GX16 на генераторе -->
+    <circle cx="99" cy="592" r="30" fill="#090a0d" stroke="#a142f4" stroke-width="2"/>
+    <text x="99" y="596" class="ma" fill="#a142f4" text-anchor="middle">GX16</text>
+    <!-- ===== Соединения питания ===== -->
+    <!-- Город -> Автомат 2А (L) -->
+    <path class="wire wL" d="M174 55 L250 55"/>
+    <circle class="node nL" cx="174" cy="55" r="4"/>
+    <!-- Город -> Автомат 2А (N) -->
+    <path class="wire wN" d="M174 85 L250 85"/>
+    <circle class="node nN" cx="174" cy="85" r="4"/>
+    <!-- Автомат 2А -> АВР Вход А (L/N) -->
+    <path id="aAL" class="wire wL running" d="M340 55 L440 55 L440 280"/>
+    <path id="aAN" class="wire wN running" d="M340 85 L460 85 L460 280"/>
+    <circle class="node nL" cx="440" cy="55" r="3.5"/>
+    <circle class="node nN" cx="460" cy="85" r="3.5"/>
+
+    <!-- Автомат 2А -> контроль 220В на GX16 (Пины 1,2) -->
+    <path id="aC1" class="wire wCTRL running" d="M280 100 L280 220 L120 220 L120 566"/>
+    <path id="aC2" class="wire wCTRL running" d="M310 100 L310 240 L145 240 L145 570"/>
+    <circle class="node nCTRL" cx="120" cy="566" r="4"/>
+    <circle class="node nCTRL" cx="145" cy="570" r="4"/>
+
+    <!-- Автомат 2А -> катушка реле A1/A2 -->
+    <path id="aK1" class="wire wCTRL running" d="M280 100 L280 200 L750 200 L750 140"/>
+    <path id="aK2" class="wire wCTRL running" d="M310 100 L310 210 L790 210 L790 150 L760 150"/>
+    <circle class="node nCTRL" cx="750" cy="140" r="4"/>
+    <circle class="node nCTRL" cx="760" cy="24" r="3.5"/>
+    <path class="wire wCTRL" d="M790 150 L790 24 L760 24"/>
+
+    <!-- Генератор -> АВР Вход B (L/N) -->
+    <path id="aBL" class="wire wGEN" d="M174 505 L360 505 L360 300 L525 300"/>
+    <path id="aBN" class="wire wN"   d="M174 545 L375 545 L375 320 L525 320"/>
+    <circle class="node nGEN" cx="174" cy="505" r="4"/>
+    <circle class="node nN"   cx="174" cy="545" r="4"/>
+
+    <!-- «Сухой контакт» NC: Реле 11/14 -> GX16 (Пины 3,4) — старт генератора -->
+    <path id="aD1" class="wire wDRY" d="M630 140 L630 210 L110 210 L110 620"/>
+    <path id="aD2" class="wire wDRY" d="M690 140 L690 250 L130 250 L130 620"/>
+    <circle class="node nDRY" cx="110" cy="620" r="4"/>
+    <circle class="node nDRY" cx="130" cy="620" r="4"/>
+    <!-- ===== Выход АВР -> Щит ===== -->
+    <path id="aOutL" class="wire wL running" d="M431 400 L431 470 L860 470 L860 320"/>
+    <path id="aOutN" class="wire wN running" d="M566 400 L566 490 L900 490 L900 340"/>
+    <text x="660" y="466" class="wl" fill="#ef4444">Фаза на щит (AR)</text>
+    <text x="660" y="486" class="wl" fill="#3b82f6">Ноль на щит (AN)</text>
+
+    <!-- PE шина -->
+    <path id="peBus" class="wire wPE" d="M40 640 L1160 640"/>
+    <path class="wire wPE" d="M99 100 L40 100 L40 640"/>
+    <text x="500" y="634" class="ml">ОБЩАЯ ШИНА PE (город · АВР · генератор · щит)</text>
+
+    <!-- ===== КОМПАКТНЫЙ ЩИТ (копия вкладки 1, запитан от АВР) ===== -->
+    <rect class="mbox" x="840" y="300" width="330" height="320" rx="8" fill="#0f1420"/>
+    <text x="1005" y="322" class="mt" text-anchor="middle">РАСПРЕДЩИТОК (как вкладка 1)</text>
+    <!-- Ввод щита от АВР -->
+    <rect class="mbox" x="860" y="335" width="120" height="34" rx="4"/>
+    <text x="920" y="357" class="ma" fill="#ef4444" text-anchor="middle">QF0 · 25А</text>
+    <!-- Шины -->
+    <path class="wire wL"  d="M860 385 L1160 385" stroke-width="4"/>
+    <path class="wire wN"  d="M860 400 L1160 400" stroke-width="4"/>
+    <!-- Строки автоматов (упрощённо) -->
+    <g>
+      <rect class="mbox" x="860" y="410" width="60" height="26" rx="3"/><text x="890" y="427" class="ml" text-anchor="middle">QF1</text>
+      <rect class="mbox" x="925" y="410" width="60" height="26" rx="3"/><text x="955" y="427" class="ml" text-anchor="middle">QF2</text>
+      <rect class="mbox" x="990" y="410" width="60" height="26" rx="3"/><text x="1020" y="427" class="ml" text-anchor="middle">QF3</text>
+      <rect class="mbox" x="1055" y="410" width="60" height="26" rx="3"/><text x="1085" y="427" class="ml" text-anchor="middle">QF4</text>
+      <rect class="mbox" x="860" y="445" width="120" height="26" rx="3" stroke="#22c55e"/><text x="920" y="462" class="ml" text-anchor="middle">QD1 УЗО</text>
+      <rect class="mbox" x="995" y="445" width="120" height="26" rx="3" stroke="#22c55e"/><text x="1055" y="462" class="ml" text-anchor="middle">QD2 УЗО</text>
+      <rect class="mbox" x="860" y="480" width="140" height="26" rx="3" stroke="#a855f7"/><text x="930" y="497" class="ml" text-anchor="middle">QFD1 ДИФ</text>
+      <rect class="mbox" x="975" y="480" width="140" height="26" rx="3" stroke="#a855f7"/><text x="1045" y="497" class="ml" text-anchor="middle">QFD2 ДИФ</text>
+      <rect class="mbox" x="860" y="515" width="60" height="26" rx="3"/><text x="890" y="532" class="ml" text-anchor="middle">QF5</text>
+      <rect class="mbox" x="925" y="515" width="60" height="26" rx="3"/><text x="955" y="532" class="ml" text-anchor="middle">QF6</text>
+      <rect class="mbox" x="990" y="515" width="60" height="26" rx="3"/><text x="1020" y="532" class="ml" text-anchor="middle">QF7</text>
+      <rect class="mbox" x="1055" y="515" width="60" height="26" rx="3"/><text x="1085" y="532" class="ml" text-anchor="middle">QF8</text>
+      <rect class="mbox" x="860" y="550" width="60" height="26" rx="3"/><text x="890" y="567" class="ml" text-anchor="middle">QF9</text>
+      <rect class="mbox" x="925" y="550" width="60" height="26" rx="3"/><text x="955" y="567" class="ml" text-anchor="middle">QF10</text>
+      <rect class="mbox" x="990" y="550" width="60" height="26" rx="3"/><text x="1020" y="567" class="ml" text-anchor="middle">QF11</text>
+      <rect class="mbox" x="1055" y="550" width="60" height="26" rx="3"/><text x="1085" y="567" class="ml" text-anchor="middle">Рез</text>
+    </g>
+    <text x="1005" y="600" class="ml" text-anchor="middle">нагрузки: свет · розетки · кухня · бойлер · насос…</text>
+   </svg>
+    <div class="legend">
+      <span><i class="sw" style="background:#ef4444"></i>Фаза L (Город)</span>
+      <span><i class="sw" style="background:#3b82f6"></i>Ноль N</span>
+      <span><i class="sw" style="background:#ff9900"></i>Фаза Генератора</span>
+      <span><i class="sw" style="background:#fbbc05"></i>Контроль 220В / катушка</span>
+      <span><i class="sw" style="background:#a142f4"></i>«Сухой контакт» NC (старт)</span>
+      <span><i class="sw" style="background:#22c55e"></i>Земля PE</span>
+    </div>
+    <p class="sub" style="margin-top:12px;">Логика: при потере города катушка реле обесточивается → нормально-замкнутый контакт <b>11-14</b> замыкает «сухой контакт» → генератор получает сигнал старта. Питание щита при этом переключается АВР с Входа А (город) на Вход B (генератор).</p>
+   </div>
+ </div>
+
+</div><!-- /wrap -->
+
+<script>
+ // Переключение вкладок
+ document.querySelectorAll('.tab-btn[data-t]').forEach(function(btn){
+   btn.addEventListener('click', function(){
+     document.querySelectorAll('.tab-btn[data-t]').forEach(b=>b.classList.remove('active'));
+     document.querySelectorAll('.pane').forEach(p=>p.classList.remove('active'));
+     btn.classList.add('active');
+     document.getElementById(btn.dataset.t).classList.add('active');
+   });
+ });
+
+ // Логика АВР (вкладка 2)
+ function setOn(ids, on){ ids.forEach(function(id){ var el=document.getElementById(id); if(el){ on?el.classList.add('running'):el.classList.remove('running'); } }); }
+ function avr(state){
+   var bC=document.getElementById('aCity'), bG=document.getElementById('aGen');
+   // линии, активные в режиме ГОРОД
+   var cityOn  = ['aAL','aAN','aC1','aC2','aK1','aK2','aOutL','aOutN'];
+   // линии, активные в режиме ГЕНЕРАТОР
+   var genOn   = ['aBL','aBN','aD1','aD2','aOutL','aOutN'];
+   if(state==='city'){
+     bC.classList.add('active'); bC.style.cssText='background:#1a73e8;border-color:#1a73e8;color:#fff';
+     bG.classList.remove('active'); bG.style.cssText='';
+     setOn(cityOn,true); setOn(['aBL','aBN','aD1','aD2'],false);
+   } else {
+     bG.classList.add('active'); bG.style.cssText='background:#e67e22;border-color:#e67e22;color:#fff';
+     bC.classList.remove('active'); bC.style.cssText='';
+     setOn(genOn,true); setOn(['aAL','aAN','aC1','aC2','aK1','aK2'],false);
+   }
+ }
+</script>
+
+</body>
+</html>

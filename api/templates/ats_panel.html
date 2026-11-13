@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Полная монтажная схема АВР TOMZN + Реле + ATS 5-Pin</title>
+    <style>
+        :root {
+            --bg-color: #0b0c10;
+            --card-bg: #141722;
+            --border-color: #242936;
+            --text-main: #f8f9fa;
+            --text-muted: #959da5;
+            
+            /* Цвета проводов */
+            --color-l-city: #ea4335;   /* Фаза Город */
+            --color-l-gen: #ff9900;    /* Фаза Генератор */
+            --color-n: #4285f4;        /* Ноль */
+            --color-pe: #34a853;       /* Земля */
+            --color-ctrl: #fbbc05;     /* Питание контроля 220В */
+            --color-dry: #a142f4;      /* Сухой контакт старта */
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        header {
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 25px;
+        }
+
+        h1 { font-size: 22px; margin: 0 0 5px 0; }
+        .desc { font-size: 14px; color: var(--text-muted); margin: 0; }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 20px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .workspace {
+            background-color: #050608;
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        button {
+            background-color: #212529;
+            border: 1px solid #3a3f44;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.15s ease;
+        }
+
+        button.active-city { background-color: #1a73e8; border-color: #1a73e8; color: white; }
+        button.active-gen { background-color: #e67e22; border-color: #e67e22; color: white; }
+
+        .sidebar { display: flex; flex-direction: column; gap: 20px; }
+        .section-title { font-size: 13px; font-weight: bold; text-transform: uppercase; color: var(--text-muted); margin-bottom: 12px; letter-spacing: 0.5px; }
+        
+        .wire-ref { display: flex; align-items: center; margin-bottom: 10px; font-size: 13px; }
+        .wire-color { width: 20px; height: 16px; border-radius: 3px; margin-right: 12px; flex-shrink: 0; }
+
+        .m-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+        .m-table th, .m-table td { padding: 8px; text-align: left; border-bottom: 1px solid var(--border-color); }
+        .m-table th { color: var(--text-muted); font-weight: 500; }
+
+        .live-wire { stroke-dasharray: 5; animation: none; }
+        .running { animation: pulse 5s linear infinite; }
+        @keyframes pulse { to { stroke-dashoffset: -50; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Нормальная схема расключения автоматики АВР</h1>
+        <p class="desc">Полное соединение всех контактов: Сеть, Блок TOMZN, Промежуточное реле, Защитный автомат 2А и Контрольный разъем генератора GX16</p>
+    </header>
+
+    <div class="layout">
+        <!-- Левая часть: Интерактивный интерактивный щит -->
+        <div class="card">
+            <div class="workspace">
+                <div class="controls">
+                    <button id="btnStateCity" class="active-city" onclick="changeState('city')">Режим: Городская сеть (Норма)</button>
+                    <button id="btnStateGen" onclick="changeState('gen')">Режим: Работа от генератора (Авария)</button>
+                </div>
+
+                <svg width="880" height="640" viewBox="0 0 880 640" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="880" height="640" fill="#08090c" rx="8"/>
+
+                    <!-- МОДУЛЬ: Сеть здания -->
+                    <rect x="30" y="40" width="130" height="80" rx="6" fill="#181a20" stroke="#2a2f3b" stroke-width="2"/>
+                    <text x="95" y="75" fill="#fff" font-size="13" font-weight="bold" text-anchor="middle">Ввод Сети 220В</text>
+                    <text x="95" y="95" fill="#1a73e8" font-size="11" text-anchor="middle">Городской свет</text>
+
+                    <!-- МОДУЛЬ: Двухполюсный автомат 2А -->
+                    <rect x="230" y="40" width="80" height="80" rx="6" fill="#181a20" stroke="#fbbc05" stroke-width="1.5"/>
+                    <text x="270" y="75" fill="#fff" font-size="12" font-weight="bold" text-anchor="middle">Автомат</text>
+                    <text x="270" y="95" fill="#fbbc05" font-size="12" font-weight="bold" text-anchor="middle">2А (2P)</text>
+
+                    <!-- МОДУЛЬ: Промежуточное реле развязки логики -->
+                    <rect x="560" y="40" width="150" height="120" rx="6" fill="#181a20" stroke="#a142f4" stroke-width="1.5"/>
+                    <text x="635" y="70" fill="#ffffff" font-size="13" font-weight="bold" text-anchor="middle">Пром. Реле</text>
+                    <text x="635" y="90" fill="#888" font-size="10" text-anchor="middle">(Катушка 220В)</text>
+                    
+                    <!-- Клеммные контакты реле -->
+                    <circle cx="590" cy="130" r="10" fill="#242936"/><text x="590" y="133" fill="#fff" font-size="10" font-weight="bold" text-anchor="middle">11</text>
+                    <circle cx="635" cy="130" r="10" fill="#242936"/><text x="635" y="133" fill="#fff" font-size="10" font-weight="bold" text-anchor="middle">12</text>
+                    <circle cx="680" cy="130" r="10" fill="#242936"/><text x="680" y="133" fill="#fff" font-size="9" font-weight="bold" text-anchor="middle">A1</text>
+                    <circle cx="680" cy="25" r="10" fill="#242936"/><text x="680" y="28" fill="#fff" font-size="9" font-weight="bold" text-anchor="middle">A2</text>
+
+                    <!-- МОДУЛЬ: Блок АВР TOMZN -->
+                    <rect x="360" y="200" width="220" height="210" rx="8" fill="#1c1f26" stroke="#3a4050" stroke-width="2"/>
+                    <text x="470" y="230" fill="#fff" font-size="15" font-weight="bold" text-anchor="middle">TOMZN TOQ5-63/2P</text>
+                    
+                    <!-- Силовые зажимы АВР -->
+                    <rect x="385" y="260" width="50" height="35" rx="4" fill="#0d0e12"/><text x="410" y="282" fill="#1a73e8" font-size="11" font-weight="bold" text-anchor="middle">Вход А</text>
+                    <rect x="495" y="260" width="50" height="35" rx="4" fill="#0d0e12"/><text x="520" y="282" fill="#e67e22" font-size="11" font-weight="bold" text-anchor="middle">Вход B</text>
+                    
+                    <!-- Управляющая колодка выходов АВР -->
+                    <rect x="385" y="350" width="40" height="30" rx="3" fill="#242936"/><text x="405" y="369" fill="#fff" font-size="11" text-anchor="middle">AR</text>
+                    <rect x="435" y="350" width="40" height="30" rx="3" fill="#242936"/><text x="455" y="369" fill="#fff" font-size="11" text-anchor="middle">AN</text>
+
+                    <!-- МОДУЛЬ: Инверторный Генератор -->
+                    <rect x="30" y="440" width="180" height="130" rx="6" fill="#181a20" stroke="#e67e22" stroke-width="2"/>
+                    <text x="120" y="475" fill="#fff" font-size="13" font-weight="bold" text-anchor="middle">Инверторный генератор</text>
+                    
+                    <!-- Круглый Разъем на Панели Генератора GX16 -->
+                    <circle cx="150" cy="505" r="36" fill="#090a0d" stroke="#a142f4" stroke-width="2"/>
+                    <text x="150" y="509" fill="#a142f4" font-size="11" font-weight="bold" text-anchor="middle">GX16</text>
+
+                    <!-- МОДУЛЬ: Нагрузка (Электрощит Жилого Дома) -->
+                    <rect x="680" y="250" width="160" height="90" rx="6" fill="#181a20" stroke="#34a853" stroke-width="2"/>
+                    <text x="760" y="300" fill="#fff" font-size="13" font-weight="bold" text-anchor="middle">Домашний Щит</text>
+
+                    <!-- Главная заземляющая шина PE щита -->
+                    <rect x="360" y="550" width="480" height="20" rx="4" fill="#1e4620"/>
+                    <text x="600" y="564" fill="#fff" font-size="11" font-weight="bold" text-anchor="middle">ГЛАВНАЯ ШИНА ЗАЗЕМЛЕНИЯ (PE)</text>
+
+
+                    <!-- ================= СИЛОВЫЕ ТРАССЫ И КОММУТАЦИЯ ================= -->
+
+                    <!-- Город -> АВР (Вход А) -->
+                    <path id="powerCityL" class="live-wire running" d="M 160 70 L 410 70 L 410 260" stroke="#ea4335" stroke-width="3.5"/>
+                    <path id="powerCityN" class="live-wire running" d="M 160 85 L 395 85 L 395 260" stroke="#4285f4" stroke-width="3.5"/>
+
+                    <!-- Запитка вспомогательного автомата 2А от Входа А Города -->
+                    <path d="M 230 70 L 160 70" stroke="#ea4335" stroke-width="1.5" stroke-dasharray="3"/>
+                    <path d="M 230 85 L 160 85" stroke="#4285f4" stroke-width="1.5" stroke-dasharray="3"/>
+
+                    <!-- Выход автомата 2А -> Разъем генератора GX16 (Пины 1 и 2) -->
+                    <path id="sigPin1" class="live-wire running" d="M 250 120 L 250 405 L 150 405 L 150 478" stroke="#fbbc05" stroke-width="2"/>
+                    <!-- Выход автомата 2А (2-й полюс) -> Разъем генератора GX16 (Пин 2) -->
+                    <path id="sigPin2" class="live-wire running" d="M 285 120 L 285 418 L 176 418 L 176 494" stroke="#fbbc05" stroke-width="2"/>
+
+                    <!-- Катушка промежуточного реле: A1 (фаза от автомата 2А) -->
+                    <path id="relayLineA1" class="live-wire running" d="M 250 150 L 680 150 L 680 140" stroke="#fbbc05" stroke-width="2"/>
+                    <circle cx="250" cy="150" r="3.5" fill="#fbbc05"/>
+
+                    <!-- Катушка промежуточного реле: A2 (ноль от автомата 2А) -->
+                    <path id="relayLineA2" class="live-wire running" d="M 285 165 L 745 165 L 745 25 L 690 25" stroke="#fbbc05" stroke-width="2"/>
+                    <circle cx="285" cy="165" r="3.5" fill="#fbbc05"/>
+
+                    <!-- Генератор -> АВР (Вход B), Фаза -->
+                    <path id="powerGenL" class="live-wire" d="M 210 465 L 610 465 L 610 277 L 545 277" stroke="#ff9900" stroke-width="3.5"/>
+
+                    <!-- Генератор -> АВР (Вход B), Ноль -->
+                    <path id="powerGenN" class="live-wire" d="M 210 485 L 625 485 L 625 290 L 545 290" stroke="#4285f4" stroke-width="3.5"/>
+
+                    <!-- АВР (AR) -> Домашний щит, Фаза -->
+                    <path id="loadLineL" class="live-wire running" d="M 405 380 L 405 505 L 665 505 L 665 300 L 680 300" stroke="#ea4335" stroke-width="3.5"/>
+
+                    <!-- АВР (AN) -> Домашний щит, Ноль -->
+                    <path id="loadLineN" class="live-wire running" d="M 455 380 L 455 520 L 650 520 L 650 315 L 680 315" stroke="#4285f4" stroke-width="3.5"/>
+
+                    <!-- «Сухой контакт» старта: Пин 3 реле (11) -> GX16 (Пин 3) -->
+                    <path id="sigPin3" class="live-wire" d="M 590 140 L 590 590 L 178 590 L 178 547" stroke="#a142f4" stroke-width="2"/>
+
+                    <!-- «Сухой контакт» старта: Пин 4 реле (12) -> GX16 (Пин 4) -->
+                    <path id="sigPin4" class="live-wire" d="M 635 140 L 635 578 L 162 578 L 162 547" stroke="#a142f4" stroke-width="2"/>
+
+                    <!-- Пины круглого разъема GX16-5 на панели генератора -->
+                    <circle cx="170" cy="496" r="4" fill="#a142f4"/><text x="170" y="489" fill="#a142f4" font-size="9" font-weight="bold" text-anchor="middle">1</text>
+                    <circle cx="191" cy="530" r="4" fill="#a142f4"/><text x="201" y="533" fill="#a142f4" font-size="9" font-weight="bold">2</text>
+                    <circle cx="178" cy="545" r="4" fill="#a142f4"/><text x="184" y="556" fill="#a142f4" font-size="9" font-weight="bold">3</text>
+                    <circle cx="162" cy="545" r="4" fill="#a142f4"/><text x="150" y="556" fill="#a142f4" font-size="9" font-weight="bold">4</text>
+                    <circle cx="149" cy="530" r="4" fill="#34a853"/><text x="139" y="533" fill="#34a853" font-size="9" font-weight="bold">5</text>
+
+                    <!-- Заземление (PE): Город, АВР, Генератор, Домашний щит -> Главная шина PE -->
+                    <path id="peCity" d="M 60 120 L 15 120 L 15 596 L 380 596 L 380 550" stroke="#34a853" stroke-width="3"/>
+                    <path id="peAts" d="M 470 410 L 470 550" stroke="#34a853" stroke-width="3"/>
+                    <path id="peGen" d="M 120 570 L 120 588 L 400 588 L 400 550" stroke="#34a853" stroke-width="3"/>
+                    <path id="peLoad" d="M 760 340 L 760 550" stroke="#34a853" stroke-width="3"/>
+
+                    <!-- Подписи проводов -->
+                    <text x="300" y="145" fill="#fbbc05" font-size="10">Катушка реле 220В</text>
+                    <text x="300" y="160" fill="#a142f4" font-size="10">Сухой контакт (11-12)</text>
+                    <text x="300" y="460" fill="#ff9900" font-size="10">Фаза генератора</text>
+                    <text x="300" y="480" fill="#4285f4" font-size="10">Ноль генератора</text>
+                    <text x="490" y="500" fill="#ea4335" font-size="10">Фаза на нагрузку</text>
+                    <text x="490" y="515" fill="#4285f4" font-size="10">Ноль на нагрузку</text>
+                    <text x="300" y="610" fill="#34a853" font-size="10">Заземление PE</text>
+                </svg>
+            </div>
+
+            <!-- Закрытие левой карточки -->
+        </div>
+
+        <!-- Правая часть: Легенда и монтажная таблица -->
+        <div class="sidebar">
+            <div class="card">
+                <div class="section-title">Цветовая кодировка проводников</div>
+                <div class="wire-ref"><div class="wire-color" style="background:#ea4335"></div>Силовая Фаза Города (L) — ВВГнг-LS 3x6</div>
+                <div class="wire-ref"><div class="wire-color" style="background:#ff9900"></div>Силовая Фаза Генератора — ВВГнг-LS 3x4</div>
+                <div class="wire-ref"><div class="wire-color" style="background:#4285f4"></div>Рабочий Ноль (N)</div>
+                <div class="wire-ref"><div class="wire-color" style="background:#fbbc05"></div>Линия контроля 220В (через автомат 2А)</div>
+                <div class="wire-ref"><div class="wire-color" style="background:#a142f4"></div>«Сухой контакт» старта (Пины 3 и 4)</div>
+                <div class="wire-ref"><div class="wire-color" style="background:#34a853"></div>Защитная земля (PE) — ПуГВ 6 мм²</div>
+            </div>
+
+            <div class="card">
+                <div class="section-title">Полная монтажная карта «Жила → Контакт»</div>
+                <table class="m-table">
+                    <tr><th>Откуда</th><th>Куда</th><th>Сигнал</th></tr>
+                    <tr><td>Ввод Сети (L)</td><td>АВР «Вход А» 1</td><td>Фаза Города</td></tr>
+                    <tr><td>Ввод Сети (N)</td><td>АВР «Вход А» 2</td><td>Ноль</td></tr>
+                    <tr><td>Ввод Сети (L)</td><td>Автомат 2А (1)</td><td>Пит. контроля</td></tr>
+                    <tr><td>Ввод Сети (N)</td><td>Автомат 2А (3)</td><td>Пит. контроля</td></tr>
+                    <tr><td>Автомат 2А (2)</td><td>GX16 Пин 1</td><td>Контроль 220В</td></tr>
+                    <tr><td>Автомат 2А (4)</td><td>GX16 Пин 2</td><td>Контроль 220В</td></tr>
+                    <tr><td>Автомат 2А (2)</td><td>Реле A1</td><td>Катушка 220В</td></tr>
+                    <tr><td>Автомат 2А (4)</td><td>Реле A2</td><td>Катушка 220В</td></tr>
+                    <tr><td>Реле 11</td><td>GX16 Пин 3</td><td>Старт (сухой)</td></tr>
+                    <tr><td>Реле 12</td><td>GX16 Пин 4</td><td>Старт (сухой)</td></tr>
+                    <tr><td>Генератор (L)</td><td>АВР «Вход B» 1</td><td>Фаза Генератора</td></tr>
+                    <tr><td>Генератор (N)</td><td>АВР «Вход B» 2</td><td>Ноль</td></tr>
+                    <tr><td>АВР AR</td><td>Домашний щит (L)</td><td>Фаза нагрузка</td></tr>
+                    <tr><td>АВР AN</td><td>Домашний щит (N)</td><td>Ноль нагрузка</td></tr>
+                    <tr><td>PE всех модулей</td><td>Главная шина PE</td><td>Заземление</td></tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function changeState(state) {
+        const bCity = document.getElementById('btnStateCity');
+        const bGen = document.getElementById('btnStateGen');
+        // Линии токов
+        const pCityL = document.getElementById('powerCityL');
+        const pCityN = document.getElementById('powerCityN');
+        const sP1 = document.getElementById('sigPin1');
+        const sP2 = document.getElementById('sigPin2');
+        const rLA1 = document.getElementById('relayLineA1');
+        const rLA2 = document.getElementById('relayLineA2');
+        const lLL = document.getElementById('loadLineL');
+        const lLN = document.getElementById('loadLineN');
+        const pGenL = document.getElementById('powerGenL');
+        const pGenN = document.getElementById('powerGenN');
+        const sP3 = document.getElementById('sigPin3');
+        const sP4 = document.getElementById('sigPin4');
+        if (state === 'city') {
+            bCity.className = 'active-city'; bGen.className = '';
+            pCityL.classList.add('running'); pCityN.classList.add('running');
+            sP1.classList.add('running'); sP2.classList.add('running');
+            rLA1.classList.add('running'); rLA2.classList.add('running');
+            lLL.classList.add('running'); lLN.classList.add('running');
+            pGenL.classList.remove('running'); pGenN.classList.remove('running');
+            sP3.classList.remove('running'); sP4.classList.remove('running');
+        } else {
+            bCity.className = ''; bGen.className = 'active-gen';
+            pCityL.classList.remove('running'); pCityN.classList.remove('running');
+            sP1.classList.remove('running'); sP2.classList.remove('running');
+            rLA1.classList.remove('running'); rLA2.classList.remove('running');
+            lLL.classList.remove('running'); lLN.classList.remove('running');
+            pGenL.classList.add('running'); pGenN.classList.add('running');
+            sP3.classList.add('running'); sP4.classList.add('running');
+        }
+    }
+</script>
+
+</body>
+</html>
+
