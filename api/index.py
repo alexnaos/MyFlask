@@ -16,11 +16,15 @@ from flask_frozen import Freezer
 BASE_DIR = Path(__file__).resolve().parent
 BLOG_DIRECTORY = "blogs"
 PROJECT_DIRECTORY = "projects"
+
+# ДОБАВЛЕНЫ telegram и vk
 CONFIG_KEYS = (
     "domain",
     "email",
     "your_name",
     "github",
+    "telegram",  
+    "vk",        
     "blog_comments",
     "hubspot",
     "linkedin",
