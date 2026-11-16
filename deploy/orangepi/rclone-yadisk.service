@@ -1,0 +1,24 @@
+[Unit]
+Description=Rclone mount Yandex.Disk (/mnt/yadisk)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=notify
+User=alex
+Group=alex
+ExecStart=/usr/bin/rclone mount yadisk: /mnt/yadisk \
+    --config /home/alex/.config/rclone/rclone.conf \
+    --vfs-cache-mode full \
+    --vfs-cache-max-size 1G \
+    --vfs-cache-min-free-space 500M \
+    --dir-cache-time 24h \
+    --poll-interval 1m \
+    --allow-other \
+    --umask 022
+ExecStop=/bin/fusermount -u /mnt/yadisk
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

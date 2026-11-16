@@ -1,0 +1,14 @@
+# Исключаем из build context всё лишнее (контекст — корень workspace, где лежат MyFlask/ и ProjectCards/)
+.git
+**/.git
+.github
+**/.github
+**/__pycache__
+**/*.pyc
+**/.pytest_cache
+**/*.log
+REPORT.md
+*.zip
+nssm.exe
+service.log
+service-error.log

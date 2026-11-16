@@ -3,3 +3,4 @@ Flask-FlatPages==0.8.2
 Frozen-Flask==0.18
 gunicorn==22.0.0
 Markdown==3.4.3
+waitress==3.0.0

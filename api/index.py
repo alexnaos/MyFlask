@@ -33,11 +33,11 @@ CONFIG_KEYS = (
 
 
 # Obsidian Vault path - читаем из config.ini или системной переменной
-OBSIDIAN_VAULT = r"C:\YandexDisk\Obsidian Vault"
+OBSIDIAN_VAULT = os.environ.get("MYFLASK_CONTENT_DIR", "")
 
 try:
     config_parser = configparser.ConfigParser()
-    config_file = Path(__file__).resolve().parent.parent / "config.ini"
+    config_file = Path(BASE_DIR) / "config.ini"
     if config_parser.read(str(config_file), encoding="utf-8"):
         if (
             config_parser.has_section("configs")
@@ -51,6 +51,9 @@ try:
                 OBSIDIAN_PUBLISH_KEY = _publish_key
 except Exception:
     traceback.print_exc()
+# MYFLASK_CONTENT_DIR (переменная окружения) имеет приоритет; затем — config.ini;
+# по умолчанию /data/Obsidian Vault (путь внутри контейнера).
+OBSIDIAN_VAULT = os.environ.get("MYFLASK_CONTENT_DIR", OBSIDIAN_VAULT or "/data/Obsidian Vault").strip()
 
 
 # Имя ключа front matter, по которому определяются заметки для публикации в Obsidian.

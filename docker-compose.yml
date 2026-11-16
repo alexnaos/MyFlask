@@ -1,0 +1,33 @@
+services:
+  app:
+    image: ${IMAGE:-ghcr.io/alexnaos/myflask:latest}
+    container_name: myflask-app
+    restart: unless-stopped
+    ports:
+      - "${BIND_ADDR:-0.0.0.0}:${APP_PORT:-8080}:8080"
+    volumes:
+      - "${HOST_YADISK_PATH:?Задайте HOST_YADISK_PATH в .env}:/data:ro"
+    environment:
+      - MYFLASK_CONTENT_DIR=${MYFLASK_CONTENT_DIR:-/data/Obsidian Vault}
+      - CARDS_CONTENT_DIR=${CARDS_CONTENT_DIR:-/data}
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/', timeout=3)"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+  watchtower:
+    image: containrrr/watchtower:latest
+    container_name: watchtower
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - WATCHTOWER_POLL_INTERVAL=60   # проверка нового образа каждые 60 секунд
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_LABEL_ENABLE=true  # обновляем только помеченные контейнеры (наше app)
+    depends_on:
+      - app
