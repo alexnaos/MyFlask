@@ -34,7 +34,7 @@ jobs:
         with:
           repository: alexnaos/ProjectCards
           path: ProjectCards
-          ref: main
+          ref: master
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
