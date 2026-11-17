@@ -29,5 +29,8 @@ services:
       - WATCHTOWER_POLL_INTERVAL=60   # проверка нового образа каждые 60 секунд
       - WATCHTOWER_CLEANUP=true
       - WATCHTOWER_LABEL_ENABLE=true  # обновляем только помеченные контейнеры (наше app)
+      # Современный Docker Desktop требует API >= 1.40, иначе watchtower падает
+      # с "client version 1.25 is too old". Фиксируем совместимую версию API.
+      - DOCKER_API_VERSION=1.43
     depends_on:
       - app
