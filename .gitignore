@@ -25,3 +25,7 @@ REPORT.md
 .vscode/
 .idea/
 .DS_Store
+
+# Локальные отчёты диагностики/развёртывания (не в публичный репозиторий)
+DIAGNOSTICS_*.md
+DEPLOY_*.md

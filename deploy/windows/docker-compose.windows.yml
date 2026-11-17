@@ -1,0 +1,26 @@
+# =============================================================================
+# compose для Windows-узла 56 (Docker Desktop).
+# Контейнер слушает 127.0.0.1:8080 (за ним nginx на :80).
+# Данные — локальная папка C:\YandexDisk (read-only).
+# Запуск:  docker compose -f docker-compose.windows.yml up -d
+# =============================================================================
+services:
+  app:
+    image: ghcr.io/alexnaos/myflask:latest
+    container_name: myflask-app-56
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8080:8080"
+    volumes:
+      - "C:/YandexDisk:/data:ro"
+    environment:
+      - MYFLASK_CONTENT_DIR=/data/Obsidian Vault
+      - CARDS_CONTENT_DIR=/data
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/', timeout=5)"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+      start_period: 60s

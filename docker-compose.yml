@@ -1,3 +1,11 @@
+# =============================================================================
+# MyFlask — объединённое приложение (MyFlask + ProjectCards) в Docker.
+# Работает одинаково на Orange Pi / Debian / Windows(Docker Desktop).
+# Настройки — в .env (см. .env.example):
+#   HOST_YADISK_PATH  — исходная папка с данными (на 103: /srv/myflask/data,
+#                       на 56: C:/YandexDisk, локально).
+#   BIND_ADDR         — 0.0.0.0 (балансировщик) или 127.0.0.1.
+# =============================================================================
 services:
   app:
     image: ${IMAGE:-ghcr.io/alexnaos/myflask:latest}
@@ -13,11 +21,11 @@ services:
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
     healthcheck:
-      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/', timeout=3)"]
-      interval: 15s
-      timeout: 5s
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/', timeout=5)"]
+      interval: 30s
+      timeout: 20s
       retries: 3
-      start_period: 30s
+      start_period: 60s
 
   watchtower:
     image: containrrr/watchtower:latest
@@ -26,11 +34,10 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
-      - WATCHTOWER_POLL_INTERVAL=60   # проверка нового образа каждые 60 секунд
+      - WATCHTOWER_POLL_INTERVAL=3600
       - WATCHTOWER_CLEANUP=true
-      - WATCHTOWER_LABEL_ENABLE=true  # обновляем только помеченные контейнеры (наше app)
-      # Современный Docker Desktop требует API >= 1.40, иначе watchtower падает
-      # с "client version 1.25 is too old". Фиксируем совместимую версию API.
+      - WATCHTOWER_LABEL_ENABLE=true
+      # Современный Docker (>= 1.40 API) без этой переменной ронял watchtower
       - DOCKER_API_VERSION=1.43
     depends_on:
       - app
