@@ -1,132 +1,344 @@
 # MyFlask Portfolio
 
-Персональный сайт-портфолио на Flask с интеграцией заметок Obsidian, страницей резюме и автоматическим запуском на Windows.
+Персональный сайт-портфолио на [Flask](https://flask.palletsprojects.com/) с интеграцией заметок из [Obsidian](https://obsidian.md/), блогом/проектами на Markdown (`Flask-FlatPages`), страницей резюме и возможностью автоматического запуска как службы Windows. Поддерживает развёртывание через Docker (вместе с проектом [ProjectCards](https://github.com/alexnaos/ProjectCards)) на Debian/Orange Pi.
 
+> ⚠️ Это личный проект с данными автора. Перед публикацией своего форка обязательно проверьте `api/config.ini` и `.env` — там не должно быть ваших реальных паролей, ключей и личных путей.
 
-• Цифровизация и данные: работа с проектной документацией в строительстве (ФРСН, ТИМ, XML-схемы), администрирование профильных порталов, работа с геоданными в QGIS.
-• Электроника и умный дом: разработка аппаратной и программной части контроллеров (ESP8266, ESP32, Arduino), настройка телеметрии, веб-серверов и автоматизации через Node-RED и MQTT.
-• Социальные инициативы: руководитель информационного портала поддержки семей с детьми с инвалидностью (helpinv.ru).
+---
 
-Инженер-проектировщик, специалист по цифровизации строительства и разработчик IoT-систем.
-Объединяю многолетний опыт в строительном проектировании (ПОС, ППР, генплан, прохождение экспертизы, ТИМ и XML-схемы Минстроя) с разработкой программного обеспечения и электроники. Создаю плагины для автоматизации САПР (AutoCAD, nanoCAD), работаю с ГИС-системами (QGIS) и проектирую автономные IoT-контроллеры на базе ESP8266/ESP32 и одноплатных ПК. Развиваю социальный проект поддержки семей с детьми-инвалидами.
+## 📖 О проекте
 
+Сайт объединяет профессиональный опыт в строительном проектировании и цифровизации с увлечением инженерией, электроникой и программированием:
 
+* **Основное:** персональное портфолио и резюме (инженер-проектировщик, специалист по цифровизации строительства, разработчик IoT-систем).
+* **Блог и проекты:** статьи и описания проектов в формате Markdown.
+* **Obsidian:** автоматически подхватывает опубликованные заметки из вашего хранилища (ваулта) Obsidian.
+* **Сервисы:** страница «О себе», поиск по блогу, sitemap/robots.txt, тёмная тема (Bootstrap 5.3).
 
-Вариант от дипсика
+### Контакты
 
-Кратко (для главного экрана)
-Алексей Золотов — ведущий инженер-проектировщик и руководитель проектов в строительстве. Специализируюсь на сложных конструктивных решениях, прохождении государственной экспертизы и управлении технической документацией. В свободное от работы время — инженер-энтузиаст: создаю системы умного дома на базе ESP32 и Python, пишу код, увлекаюсь рыбалкой, фантастикой и прогрессивной электронной музыкой.
+* Сайт проекта: https://helpinv.ru
+* Telegram: @helpinv
+* Email: alexnaos@gmail.com / alexnaos@yandex.ru
+* GitHub: github.com/alexnaos
 
-Подробно (для раздела «О себе»)
-Привет! Меня зовут Алексей Золотов. Уже более 20 лет я работаю в сфере строительства и проектирования. Мой профессиональный фокус — это управление сложными инженерными проектами, аудит разделов (КЖ, АР, ПОС, СГП), согласование документации в надзорных органах (Мосэксперт) и координация работы множества подрядчиков и специалистов. Я привык держать под контролем сотни задач одновременно: от разработки чертежей в CAD-системах (ПРОСАПР, СПДС) до решения вопросов на стройплощадке.
-
-Но инженерия для меня — это не только работа, но и образ мышления. Я искренне увлечен технологиями. На моем GitHub-профиле можно найти проекты по созданию кастомных устройств: от регуляторов мощности на ESP32 с управлением по MQTT до интеграций с Home Assistant. Мне нравится писать на Python, работать с микроконтроллерами, автоматизировать рутину и изучать возможности искусственного интеллекта (активно пользуюсь DeepSeek и нейросетями для решения инженерных задач).
-
-Вне работы я остаюсь любознательным исследователем. Увлекаюсь фантастикой (в том числе вселенной Warhammer 40,000), люблю классическую литературу, ценю качественную музыку в стиле Trance. А для перезагрузки после сложных проектов нет ничего лучше рыбалки на природе или возни с автоматизацией теплиц и садового участка.
-
-Я верю, что лучшие решения рождаются на стыке дисциплин: когда глубокое понимание физики строительных конструкций соединяется с навыками программирования и современными цифровыми инструментами.
-
-
-
-• Сайт проекта: helpinv.ru
-• Telegram: @helpinv
-• Email: alexnaos@gmail.com / alexnaos@yandex.ru
-• GitHub: github.com/alexnaos
-
-
+---
 
 ## ✨ Возможности
 
-- **Главная страница**: Отображение последних заметок из вашего хранилища Obsidian (с поддержкой сортировки таблицы по названию и дате).
-- **Блог и Проекты**: Работа на основе библиотеки `Flask-FlatPages` (файлы `.md` в папке `content`).
-- **Страница Резюме**: Отображение резюме в формате Markdown с поддержкой вкладок (настраивается через `config.ini`) и корректным выводом картинок.
-- **Автоматический запуск**: Скрипт `run_server.py` использует `Waitress` и `NSSM` для работы в качестве службы Windows (запускается вместе с системой).
-- **Тёмная тема**: Использование Bootstrap 5.3 с адаптивным дизайном.
+| Возможность | Описание |
+|-------------|----------|
+| **Главная страница** | Последние заметки из хранилища Obsidian с сортировкой по названию и дате |
+| **Блог** | Статьи в `api/content/blogs/` на базе `Flask-FlatPages` (YAML front matter) |
+| **Проекты** | Карточки проектов в `api/content/projects/` |
+| **Резюме** | Страница `/resume` с вкладками (настраивается через `api/config.ini`) |
+| **Поиск** | Поисковый запрос по публикациям блога (`/blog/search`) |
+| **SEO** | `robots.txt`, `sitemap.xml`, OpenGraph/description/canonical |
+| **Тёмная тема** | Bootstrap 5.3, адаптивная вёрстка |
+| **Автозапуск Windows** | Waitress + NSSM — работает как служба (запуск вместе с Windows) |
+| **Docker** | Сборка под `linux/amd64` и `linux/arm64` (Orange Pi), watchtower для автообновлений |
+
+---
 
 ## 🛠️ Стек технологий
 
-- Python 3.14+
-- Flask
-- Flask-FlatPages
-- Flask-Frozen
-- Waitress (для production-сервера)
-- NSSM (для создания службы Windows)
-- Pandoc (для конвертации резюме из DOCX)
-- Bootstrap 5.3
+* **Python 3.11+**
+* [Flask](https://flask.palletsprojects.com/) 3.0.3
+* [Flask-FlatPages](https://python-flask-flatpages.readthedocs.io/) — блог и проекты из `.md`
+* [Frozen-Flask](https://python-frozen-flask.readthedocs.io/) — статическая экспорт
+* [Waitress](https://docs.pylonsproject.org/projects/waitress/) — production WSGI-сервер
+* [gunicorn](https://gunicorn.org/) — сервер в контейнере
+* [Markdown](https://Python-Markdown.github.io/) — рендеринг Markdown
+* [NSSM](https://nssm.cc/) — служба Windows
+* [Pandoc](https://pandoc.org/) — конвертация резюме из DOCX (опционально)
+* [Bootstrap 5.3](https://getbootstrap.com/) — фронтенд
+* Docker / Docker Compose — продакшен-развёртывание
+
+---
+
+## 📁 Структура проекта
+
+```
+MyFlask/
+├── api/
+│   ├── config.ini          # Настройки сайта (имя, email, пути, соцсети, Obsidian, вкладки резюме)
+│   ├── index.py            # Точка входа Flask-приложения (create_app)
+│   ├── content/
+│   │   ├── blogs/          # Статьи блога (*.md с YAML front matter)
+│   │   └── projects/       # Карточки проектов (*.md)
+│   ├── static/
+│   │   ├── resume.md       # Основное резюме (Markdown)
+│   │   ├── resume_dev.md   # Резюме для вкладки «Разработка»
+│   │   ├── resume.pdf      # PDF-вариант резюме
+│   │   ├── index.js        # Клиентский JS
+│   │   └── images/         # Фото, иконки, вложения
+│   └── templates/          # Jinja2-шаблоны (base.html, about.html, ...)
+├── deploy/
+│   ├── README-FAILOVER.md  # Отказоустойчивость двух узлов (56 ↔ 103)
+│   ├── windows/            # Конфиги Nginx/NSSM для Windows
+│   ├── linux/              # Конфиги Nginx для Debian
+│   └── orangepi/           # Настройки под Orange Pi
+├── tests/
+│   └── test_app.py         # Публичные роуты, резюме, заголовки безопасности, поиск
+├── .dockerignore
+├── .env.example            # Шаблон переменных окружения для docker-compose
+├── .gitignore
+├── Dockerfile              # Мультиплатформенный образ (MyFlask + ProjectCards)
+├── docker-compose.yml      # Запуск через Docker Compose
+├── requirements.txt
+├── check_md_fields.py      # Скрипт добавления front matter в заметки
+├── convert_resume.py       # Конвертация резюме
+└── README.md
+```
+
+---
 
 ## 🚀 Быстрый старт (разработка)
 
-1. **Клонируйте репозиторий:**
-   ```bash
-   git clone https://github.com/ваш_ник/MyFlask.git
-   cd MyFlask
+### 1. Клонирование
 
-   Установите зависимости:
+```bash
+git clone https://github.com/alexnaos/MyFlask.git
+cd MyFlask
+```
 
-bash
+### 2. Виртуальное окружение и зависимости
+
+```bash
+python -m venv .venv
+# Windows
+.venv\Scripts\activate
+# Linux/macOS
+source .venv/bin/activate
+
 pip install -r requirements.txt
-Настройте конфигурацию:
-Отредактируйте api/config.ini, указав свои данные (имя, email, путь к хранилищу Obsidian и т.д.).
+```
 
-Запустите сервер разработки:
+### 3. Настройка конфигурации
 
-bash
+Отредактируйте `api/config.ini`:
+
+```ini
+[configs]
+domain = http://127.0.0.1:5000
+email = ваша@почта.ru
+your_name = Имя Фамилия
+github = https://github.com/ваш_ник
+telegram = https://t.me/ваш_ник
+vk = https://vk.com/...
+twitter = https://x.com/...
+
+; Путь к хранилищу Obsidian (оставьте пустым, если не нужно)
+obsidian_vault = C:/Путь/К/Obsidian Vault
+obsidian_publish_key = publish
+
+[resumes]
+main = resume.md | Основное
+dev = resume_dev.md | Разработка
+```
+
+### 4. Запуск сервера разработки
+
+```bash
 python api/index.py
+```
 
-Запустите сервер разработки:
+Сайт будет доступен по адресу **http://127.0.0.1:5000**.
 
-bash
-python api/index.py
-Сайт будет доступен по адресу http://127.0.0.1:5000.
-🖥️ Установка как службы Windows (Production)
-Для автоматического запуска при загрузке системы используется связка Waitress + NSSM.
+Доступные маршруты:
+
+* `/` — главная (заметки Obsidian)
+* `/about` — страница «О себе»
+* `/blog/` — список постов блога
+* `/blog/<slug>` — отдельный пост
+* `/blog/search` — поиск (POST, параметр `query`)
+* `/projects/` — карточки проектов
+* `/resume` — резюме (с вкладками)
+* `/obsidian/<path>` — просмотр заметки из vault
+* `/schematics/ats`, `/schematics/shield` — панели схемами
+* `/robots.txt`, `/sitemap.xml`
+
+### 5. Тесты
+
+```bash
+pip install pytest
+pytest
+```
+
+---
+
+## ⚙️ Конфигурация
+
+### `api/config.ini`
+
+Содержит секции:
+
+* `[configs]` — общие настройки сайта (домен, email, имя, соцсети, путь к Obsidian, ключ публикации).
+* `[resumes]` — вкладки резюме. Формат: `ключ = имя_файла.md | Название вкладки`.
+
+Пример добавления вкладки:
+
+```ini
+[resumes]
+main = resume.md | Основное
+dev  = resume_dev.md | Разработка
+pm   = resume_pm.md  | Менеджмент
+```
+
+### `.env` (только Docker)
+
+Скопируйте `.env.example` в `.env` и заполните:
+
+```bash
+cp .env.example .env
+```
+
+Ключевые переменные:
+
+| Переменная | Значение по умолчанию | Описание |
+|------------|----------------------|----------|
+| `IMAGE` | `ghcr.io/alexnaos/myflask:latest` | Образ контейнера |
+| `BIND_ADDR` | `0.0.0.0` | Адрес прослушивания (`127.0.0.1` для локального запуска) |
+| `APP_PORT` | `8080` | Порт хоста |
+| `HOST_YADISK_PATH` | `/srv/myflask/data` | Путь к данным на хосте (монтируется в `/data`) |
+| `MYFLASK_CONTENT_DIR` | `/data/Obsidian Vault` | Путь к vault Obsidian внутри контейнера |
+| `CARDS_CONTENT_DIR` | `/data` | Путь к карточкам ProjectCards |
+| `PEER_HOST` | `192.168.1.103` | Соседний узел для nginx failover |
+
+> `.env` уже добавлен в `.gitignore` — не коммитьте его.
+
+---
+
+## 📝 Как добавить контент
+
+### Блог
+
+Создайте файл `api/content/blogs/<имя>.md` с YAML front matter:
+
+```markdown
+---
+title: Заголовок статьи
+date: 2024-01-15
+publish: true
+---
+
+Текст статьи в Markdown.
+```
+
+### Проекты
+
+Создайте файл `api/content/projects/<имя>.md`:
+
+```markdown
+---
+title: Название проекта
+date: 2024-01-10
+publish: true
+---
+
+Описание проекта.
+```
+
+### Резюме
+
+Отредактируйте `api/static/resume.md`. Для вкладок добавьте записи в секцию `[resumes]` файла `api/config.ini` (см. раздел «Конфигурация»).
+
+### Obsidian
+
+1. Укажите путь к вашему vault в `api/config.ini` (`obsidian_vault`) или переменной `MYFLASK_CONTENT_DIR`.
+2. В начале заметки добавьте front matter:
+
+```markdown
+---
+publish: true
+title: Заголовок заметки
+date: 2024-01-15
+---
+```
+
+Только заметки с ключом `obsidian_publish_key` (по умолчанию `publish: true`) отображаются на сайте.
+
+> Вспомогательный скрипт `check_md_fields.py` помогает добавлять нужные поля в заметки пакетно.
+
+---
+
+## 🖥️ Запуск в продакшене
+
+### Вариант A — Docker (рекомендуется для Linux/Orange Pi)
+
+```bash
+cp .env.example .env
+# отредактируйте .env под свой хост
+docker compose up -d
+```
+
+Сайт будет доступен на порту `APP_PORT` (по умолчанию 8080). Образ обновляется автоматически через **watchtower** (раз в час).
+
+Сборка образа локально:
+
+```bash
+docker compose build
+```
+
+### Вариант B — Windows (Waitress + NSSM)
 
 Установите Waitress:
 
-bash
+```powershell
 pip install waitress
-Скачайте NSSM с официального сайта и положите nssm.exe в корень проекта.
+```
 
-Создайте службу (в PowerShell от имени Администратора):
-powershell
-.\nssm.exe install MyFlaskApp "C:\Python314\python.exe" "C:\Projects\MyFlask\run_server.py"
+Скачайте [NSSM](https://nssm.cc/download) и положите `nssm.exe` в корень проекта.
+
+Создайте службу (PowerShell от имени администратора):
+
+```powershell
+.\nssm.exe install MyFlaskApp "C:\Путь\К\Python\python.exe" "-m waitress --listen=127.0.0.1:8080 api:index"
 .\nssm.exe set MyFlaskApp AppDirectory "C:\Projects\MyFlask"
 .\nssm.exe set MyFlaskApp AppExit Default Restart
 .\nssm.exe start MyFlaskApp
-📁 Структура проекта
-text
-MyFlask/
-├── api/
-│   ├── config.ini          # Настройки сайта и путей
-│   ├── index.py            # Основной код Flask-приложения
-│   ├── content/            # Markdown-файлы для блога и проектов
-│   ├── static/             # Картинки, CSS, файлы резюме (resume.md)
-│   └── templates/          # HTML-шаблоны (Jinja2)
-├── .gitignore
-├── requirements.txt
-├── run_server.py           # Скрипт запуска через Waitress для службы Windows
-└── README.md
-📝 Как добавить контент
-Блог: Создайте файл .md в api/content/blogs/ с заголовком в формате YAML (см. примеры).
+```
 
-Проекты: Создайте файл .md в api/content/projects/.
+Сайт будет доступен по `http://127.0.0.1:8080`. Для внешнего доступа используйте Nginx в качестве reverse-proxy (конфиги см. в `deploy/windows/`).
 
-Резюме: Отредактируйте api/static/resume.md. Для добавления вкладок используйте секцию [resumes] в api/config.ini.
+> Скрипт `run_server.py`, упоминаемый в более ранних версиях, отсутствует — используйте встроенный модуль `waitress` (см. пример выше) или создайте собственный entrypoint.
 
-⚠️ Важно
-Файл config.ini содержит ваши личные данные. При публикации в открытый репозиторий убедитесь, что там нет паролей или API-ключей.
-
-Для корректного отображения картинок из Pandoc в index.py предусмотрена автоматическая замена путей.
-
-
-
-C:\Projects\MyFlask\check_md_fields.py
-Скрипт добавления полей в заметки
----
-date: 'сегодня'
-publish: true
-title: Название заметки
 ---
 
-(Get-Content "C:\Projects\MyFlask\api\templates\base.html" -Encoding UTF8) -replace '<div class="container-lg pt-5">', '<div class="container pt-5" style="max-width: 960px;">' | Set-Content "C:\Projects\MyFlask\api\templates\base.html" -Encoding UTF8; (Get-Content "C:\Projects\ProjectCards\web_app.py" -Encoding UTF8) -replace '<div class="container-lg py-5">', '<div class="container py-5" style="max-width: 960px;">' | Set-Content "C:\Projects\ProjectCards\web_app.py" -Encoding UTF8
+## 🔁 Отказоустойчивость (двух узлов)
 
+Проект рассчитан на работу на двух узлах (Windows 56 + Debian 103) с авто-переключением через Nginx:
+
+* **56 (Windows):** Nginx :80 → основной `103:8080`, резерв `127.0.0.1:8080`.
+* **103 (Debian):** Docker-контейнер :8080 → основной `127.0.0.1:8080`, резерв `56:8080`.
+* Домен `rad.sloboda43.netcraze.pro` направляется роутером на один живой узел.
+
+Подробности: `deploy/README-FAILOVER.md`.
+
+---
+
+## 🔒 Безопасность
+
+* `api/config.ini` и `.env` содержат личные данные — не публикуйте их в открытом репозитории.
+* `.gitignore` уже исключает `.env`, `*.log`, `REPORT.md`, `DIAGNOSTICS_*.md`, `DEPLOY_*.md`, `nssm.exe`.
+* Применяются заголовки безопасности: `X-Content-Type-Options: nosniff`, `Strict-Transport-Security`.
+
+---
+
+## 🤝 Вклад
+
+1. Форкните репозиторий.
+2. Создайте ветку `git checkout -b feature/ваша-тема`.
+3. Внесите изменения и проверьте их тестами (`pytest`).
+4. Отправьте Pull Request.
+
+---
+
+## 📄 Лицензия
+
+Личный проект. Используйте код на свой страх и риск.
+
+---
+
+**Автор:** Золотов Алексей — инженер-проектировщик, специалист по цифровизации строительства, разработчик IoT-систем.  
+GitHub: https://github.com/alexnaos | Email: alexnaos@gmail.com

@@ -3,6 +3,19 @@ name: Build & Push image
 on:
   push:
     branches: [main]
+    paths-ignore:
+      # Документация и отчёты — не влияют на сборку образа
+      - 'README.md'
+      - '*.md'
+      - 'DEPLOY_*.md'
+      - 'DIAGNOSTICS_*.md'
+      - 'REPORT.md'
+      # Конфигурация и скрипты развёртывания (не часть образа)
+      - '.gitignore'
+      - '.env.example'
+      - 'deploy/**'
+      # Тесты — не меняют содержимое контейнера
+      - 'tests/**'
   workflow_dispatch:
   repository_dispatch:
     types: [deploy]
