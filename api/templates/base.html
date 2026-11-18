@@ -1,29 +1,46 @@
-﻿<!DOCTYPE html>
+﻿<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Золотов А.С. portfolio: Инженер-проектировщик (ПОС, СПОЗУ, БИМ/XML), ESP8266/ESP32 и Linux." />
+    <meta
+      name="description"
+      content="Золотов А.С. portfolio: Инженер-проектировщик (ПОС, СПОЗУ, БИМ/XML), ESP8266/ESP32 и Linux."
+    />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="{{ canonical_url }}" />
-    <meta property="og:title" content="{{ self.title()|striptags }} | {{ your_name }}" />
-    <meta property="og:description" content="Инженер-проектировщик (ПОС, СПОЗУ, БИМ/XML), ESP8266/ESP32 и Linux." />
+    <meta
+      property="og:title"
+      content="{{ self.title()|striptags }} | {{ your_name }}"
+    />
+    <meta
+      property="og:description"
+      content="Инженер-проектировщик (ПОС, СПОЗУ, БИМ/XML), ESP8266/ESP32 и Linux."
+    />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="{{ canonical_url }}" />
 
     <!-- Bootstrap 5.3.8 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
-          rel="stylesheet"
-          integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
-          crossorigin="anonymous" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
+    />
 
     <!-- Font Awesome -->
-    <link rel="stylesheet"
-          href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-          crossorigin="anonymous" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+      crossorigin="anonymous"
+    />
 
-    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='images/favicon.svg') }}" />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="{{ url_for('static', filename='images/favicon.svg') }}"
+    />
 
     <title>{% block title %}Home{% endblock %} | {{ your_name }}</title>
 
@@ -32,47 +49,66 @@
     </script>
 
     <!-- Кастомные стили -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
   </head>
 
   <body class="bg-light text-dark">
     <!-- Здесь задана компактная ширина: max-width: 800px -->
-    <div class="container pt-5" style="max-width: 800px;">
-      
+    <div class="container pt-5" style="max-width: 800px">
       <!-- Шапка -->
       <div class="d-flex flex-row align-items-center">
         <a href="{{ url_for('home') }}">
-          <img src="{{ url_for('static', filename='images/headshot.jpg') }}"
-               class="img-thumbnail shadow-sm"
-               alt="{{ your_name }}"
-               width="180" height="180" />
+          <img
+            src="{{ url_for('static', filename='images/headshot.jpg') }}"
+            class="img-thumbnail shadow-sm"
+            alt="{{ your_name }}"
+            width="220"
+            height="220"
+          />
         </a>
         <!-- Обертка для имени и приветствия -->
         <div class="p-3">
-            <div class="h1 mb-1">{{ your_name }}</div>
-            <p class="text-info mb-0"> Добро пожаловать в мою цифровую обитель!</p>
-            
+          <div class="h1 mb-1">{{ your_name }}</div>
+          <p class="text-info mb-0">Добро пожаловать в мою цифровую обитель!</p>
+          <p>
+            Ведущий инженер-проектировщик и руководитель проектов в
+            строительстве. Специализируюсь на сложных конструктивных решениях,
+            прохождении государственной экспертизы и управлении технической
+            документацией.
+          </p>
         </div>
       </div>
 
       <!-- Навигация -->
       <nav class="navbar navbar-expand navbar-light border-bottom mb-4">
-        <button class="navbar-toggler" type="button"
-                data-bs-toggle="collapse" data-bs-target="#navbar">
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbar"
+        >
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbar">
           <div class="navbar-nav ms-auto">
-            <a href="{{ url_for('resume') }}" class="nav-item nav-link" id="resume">resume</a>
-            <a href="/projects/" class="nav-item nav-link" id="projects">projects</a>
+            <a
+              href="{{ url_for('resume') }}"
+              class="nav-item nav-link"
+              id="resume"
+              >resume</a
+            >
+            <a href="/projects/" class="nav-item nav-link" id="projects"
+              >projects</a
+            >
           </div>
         </div>
       </nav>
 
       <!-- Контент -->
-      <div>
-        {% block content %}{% endblock %}
-      </div>
+      <div>{% block content %}{% endblock %}</div>
 
       <!-- Подвал -->
       <small class="d-block mt-5 pb-4">
@@ -83,10 +119,15 @@
     </div>
 
     <!-- Bootstrap 5.3.8 JS Bundle -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
-            crossorigin="anonymous"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+      crossorigin="anonymous"
+    ></script>
 
-    <script type="text/javascript" src="{{ url_for('static', filename='index.js') }}"></script>
+    <script
+      type="text/javascript"
+      src="{{ url_for('static', filename='index.js') }}"
+    ></script>
   </body>
 </html>
