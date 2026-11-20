@@ -519,6 +519,12 @@ def create_app() -> Flask:
             ]
         return render_template("blog.html", posts=newest(pages)[:10], query=query)
 
+    @app.get("/projects/")
+    def projects():
+        """Перенаправление на combined сервер с карточками проектов"""
+        # Редирект на наш combined сервер на порту 8088
+        return redirect("http://127.0.0.1:8088/projects/")
+
     @app.get("/obsidian/<path:path>")
     def obsidian_note(path):
         """Display an Obsidian note from the vault."""
@@ -560,11 +566,57 @@ def create_app() -> Flask:
 
             title = metadata.get("title", os.path.splitext(os.path.basename(path))[0])
 
+            # Обработка wikilinks Obsidian перед конвертацией
+            # Преобразование [[wikilink]] и [[wikilink|display text]] в обычный текст
+            # Также обработка ![[image.png]] для изображений
+            def replace_wikilink(match):
+                # Получаем всё содержимое внутри [[...]]
+                content = match.group(1)
+                # Если есть разделитель |, берем часть после |
+                if '|' in content:
+                    return content.split('|', 1)[1]
+                # Иначе возвращаем всё содержимое
+                return content
+            
+            # Сначала обрабатываем изображения ![[...]] - преобразуем в стандартный Markdown
+            processed_body = re.sub(r'!\[\[([^\]]+)\]\]', r'![\1](\1)', body)
+            # Затем обрабатываем обычные wikilinks [[...]]
+            processed_body = re.sub(r'\[\[([^\]]+)\]\]', replace_wikilink, processed_body)
+            # Обработка зачеркнутого текста ~~text~~
+            processed_body = re.sub(r'~~([^~]+)~~', r'<del>\1</del>', processed_body)
+            
+            # Конвертируем Markdown в HTML с поддержкой расширений
+            html_body = markdown.markdown(
+                processed_body, 
+                extensions=[
+                    'fenced_code',      # Блоки кода с выделением синтаксиса
+                    'tables',          # Поддержка таблиц
+                    'sane_lists',      # Улучшенные списки
+                    'toc',             # Оглавление
+                    'extra',           # Дополнительные расширения (abbr, footnotes, attr_list)
+                    'nl2br',           # Преобразование новых строк в <br>
+                ]
+            )
+            
+            # Пост-обработка: добавляем Bootstrap классы к таблицам и оборачиваем в responsive контейнер
+            import re
+            # Добавляем классы к таблицам без атрибутов
+            html_body = re.sub(r'<table(\s|>)', r'<table class="table table-bordered"\1', html_body)
+            
+            # Оборачиваем таблицы в .table-responsive для горизонтального скролла при необходимости
+            # Находим все таблицы и оборачиваем их
+            html_body = re.sub(
+                r'(<table class="table table-bordered".*?</table>)',
+                r'<div class="table-responsive">\1</div>',
+                html_body,
+                flags=re.DOTALL
+            )
+
             return render_template(
                 "obsidian-note.html",
                 title=title,
                 date=metadata.get("date", ""),
-                body=body,
+                body=html_body,
                 path=path,
             )
         except Exception as e:
@@ -635,5 +687,5 @@ def get_latest_posts(limit: int = 10):
 
 
 if __name__ == "__main__":
-    # Запускаем сервер на порту 5000
-    app.run(host="127.0.0.1", port=5000, debug=True)
+    # Запускаем сервер на порту 8080
+    app.run(host="127.0.0.1", port=8080, debug=True)

@@ -3,29 +3,18 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
-.pytest_cache/
 
-# Логи службы
+# Логи
 *.log
-service.log
-service-error.log
 
-# Архивы и бинарники
-*.zip
-nssm.exe
-nssm-2.24/
-
-# Окружение и секреты
+# Виртуальное окружение
 .venv/
 venv/
-.env
-REPORT.md
+
+# Файлы конфигурации (содержат личные данные)
+api/config.ini
 
 # Временные файлы редакторов
 .vscode/
 .idea/
 .DS_Store
-
-# Локальные отчёты диагностики/развёртывания (не в публичный репозиторий)
-DIAGNOSTICS_*.md
-DEPLOY_*.md

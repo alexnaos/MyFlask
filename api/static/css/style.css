@@ -1,0 +1,78 @@
+/* Минимальные стили для улучшения отображения Markdown контента */
+
+/* Улучшение для таблиц Bootstrap на маленьких экранах */
+@media screen and (max-width: 768px) {
+    .table {
+        font-size: 0.85em;
+    }
+    
+    /* Гарантируем, что таблицы не выходят за пределы на мобильных */
+    .table-responsive {
+        border: 1px solid #dee2e6;
+        border-radius: 0.25rem;
+    }
+}
+
+/* Улучшения для кода */
+pre {
+    padding: 1em;
+    overflow: auto;
+    background-color: #f8f9fa;
+    border-radius: 0.25rem;
+    max-width: 100%;
+}
+
+code {
+    padding: 0.2em 0.4em;
+    background-color: #f8f9fa;
+    border-radius: 0.25rem;
+    font-size: 85%;
+}
+
+/* Изображения */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Зачеркнутый текст */
+del {
+    text-decoration: line-through;
+}
+
+/* Гарантируем, что контент не выходит за пределы карточки */
+.card-body {
+    overflow-x: hidden;
+}
+
+/* Для очень длинных слов в таблицах */
+.table td {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+pre {
+    padding: 1em;
+    overflow: auto;
+    background-color: #f8f9fa;
+    border-radius: 0.25rem;
+    max-width: 100%;
+}
+
+code {
+    padding: 0.2em 0.4em;
+    background-color: #f8f9fa;
+    border-radius: 0.25rem;
+    font-size: 85%;
+    word-wrap: break-word;
+    max-width: 100%;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+del {
+    text-decoration: line-through;
+}
