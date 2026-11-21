@@ -1,27 +1,20 @@
 {% extends "base.html" %}
 {% block title %}{{ title or "Заметка" }}{% endblock %}
 {% block content %}
-<div class="card mt-4 shadow-sm">
-  <!-- Шапка карточки -->
-  <div class="card-header bg-light d-flex justify-content-between align-items-center border-bottom">
-    <!-- Убрали инлайн-стили цвета, используем классы Bootstrap -->
-    <span class="fw-bold fs-5">
-      {{ title if title else "Без названия" }}
-    </span>
-    <a href="{{ url_for('home') }}" class="btn btn-sm btn-dark">← На главную</a>
+
+<div class="card-mama mb-8">
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="font-mama text-xl font-bold text-gray-900">{{ title if title else "Без названия" }}</h2>
+    <a href="{{ url_for('home') }}" class="btn-mama btn-mama-secondary text-xs px-3 py-1">← На главную</a>
   </div>
 
-  <!-- Тело карточки -->
-  <div class="card-body">
-    {% if date %}
-      <!-- Заменили стили на стандартный класс text-muted small -->
-      <p class="text-muted small">Дата: {{ date }}</p>
-    {% endif %}
-    
-    <!-- Текст заметки с поддержкой Markdown -->
-    <div class="mt-3">
-      {{ body | safe }}
-    </div>
+  {% if date %}
+  <p class="text-xs text-gray-500 mb-4">Дата: {{ date }}</p>
+  {% endif %}
+
+  <div class="literary-text-mama">
+    {{ body | safe }}
   </div>
 </div>
+
 {% endblock %}

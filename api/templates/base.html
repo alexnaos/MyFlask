@@ -1,134 +1,170 @@
-﻿<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="ru">
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="Золотов А.С. portfolio: Инженер-проектировщик (ПОС, СПОЗУ, БИМ/XML), ESP8266/ESP32 и Linux."
-    />
-    <meta name="robots" content="index, follow" />
-    <link rel="canonical" href="{{ canonical_url }}" />
-    <meta
-      property="og:title"
-      content="{{ self.title()|striptags }} | {{ your_name }}"
-    />
-    <meta
-      property="og:description"
-      content="Инженер-проектировщик (ПОС, СПОЗУ, БИМ/XML), ESP8266/ESP32 и Linux."
-    />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="{{ canonical_url }}" />
-
-    <!-- Bootstrap 5.3.8 CSS -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
-      crossorigin="anonymous"
-    />
-
-    <!-- Font Awesome -->
-    <link
-      rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-      crossorigin="anonymous"
-    />
-
-    <link
-      rel="icon"
-      type="image/svg+xml"
-      href="{{ url_for('static', filename='images/favicon.svg') }}"
-    />
-
+    <meta name="description" content="{% block description %}Портфолио инженера-проектировщика{% endblock %}" />
     <title>{% block title %}Home{% endblock %} | {{ your_name }}</title>
+
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='images/favicon.svg') }}" />
+
+    <!-- Tailwind CSS (как в MyMama) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+      /* Основной шрифт всего сайта — Arial Narrow (как в MyMama) */
+      html { font-size: 120%; }
+      body {
+        font-family: 'Arial Narrow', Arial, sans-serif;
+        background: #f8f9fa;
+        color: #2d3748;
+        -webkit-font-smoothing: antialiased;
+      }
+      .font-mama { font-family: 'Arial Narrow', Arial, sans-serif; }
+      a { color: #2d3748; text-decoration: none; transition: color 0.2s; }
+      a:hover { color: #1d4ed8; }
+      .container-mama { max-width: 1280px; margin: 0 auto; padding: 0 1rem; }
+      .card-mama {
+        background: #fff;
+        border-radius: 0.75rem;
+        padding: 1.5rem;
+        box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);
+        transition: all 0.2s;
+        border: 1px solid #e2e8f0;
+      }
+      .card-mama:hover {
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.1);
+        transform: translateY(-2px);
+      }
+      .btn-mama {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.5rem;
+        font-weight: 500;
+        transition: all 0.2s;
+        cursor: pointer;
+        border: none;
+        font-family: inherit;
+      }
+      .btn-mama-primary {
+        background: #1d4ed8;
+        color: white;
+      }
+      .btn-mama-primary:hover {
+        background: #2563eb;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.1);
+        color: white;
+      }
+      .btn-mama-secondary {
+        background: transparent;
+        color: #2d3748;
+        border: 2px solid #2d3748;
+      }
+      .btn-mama-secondary:hover {
+        background: #2d3748;
+        color: white;
+      }
+      h1, h2, h3 { font-family: 'Arial Narrow', Arial, sans-serif; }
+      h1 { font-size: 1.75rem; line-height: 2.25rem; font-weight: 700; margin-bottom: 1rem; }
+      h2 { font-size: 1.5rem; line-height: 2rem; font-weight: 600; margin-bottom: 1rem; }
+      h3 { font-size: 1.25rem; line-height: 1.75rem; font-weight: 600; margin-bottom: 0.75rem; }
+      .text-muted-mama { color: #718096 !important; }
+      .content-wrapper-mama { max-width: 900px; margin: 0 auto; padding: 0 1rem; }
+      /* Типографика художественных и маркдаун-текстов */
+      .literary-text-mama { font-size: 1.0625rem; line-height: 1.9; color: #2d3748; }
+      .literary-text-mama p { margin: 0 0 1rem; }
+      .literary-text-mama h1, .literary-text-mama h2, .literary-text-mama h3 { margin-top: 1.5rem; }
+      .literary-text-mama blockquote { border-left: 3px solid #1d4ed8; padding-left: 1rem; color: #4a5568; margin: 1rem 0; }
+      .literary-text-mama img { max-width: 100%; height: auto; border-radius: 0.5rem; }
+      @media (min-width: 640px) { .container-mama { padding: 0 1.5rem; } }
+      @media (min-width: 768px) {
+        h1 { font-size: 2.25rem; line-height: 2.75rem; }
+        h2 { font-size: 1.75rem; line-height: 2.25rem; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after { animation-duration: 0s !important; transition-duration: 0s !important; }
+      }
+    </style>
 
     <script type="application/ld+json">
       {{ {"@context": "https://schema.org", "@type": "Person", "name": your_name, "url": "https://" ~ domain, "sameAs": [github, linkedin, twitter]} | tojson }}
     </script>
-
-    <!-- Кастомные стили -->
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/style.css') }}"
-    />
   </head>
+  <body class="font-mama bg-gray-50 text-gray-900 flex flex-col min-h-screen">
+    <!-- Шапка -->
+    <header class="bg-white border-b border-gray-100 sticky top-0 z-50">
+    <div class="content-wrapper-mama">
+        <div class="flex flex-col md:flex-row items-stretch justify-between gap-6 py-2 md:py-4" style="width: 100%;">
+            <!-- Левая колонка: фото -->
+            <a href="{{ url_for('home') }}" class="flex-shrink-0">
+                <img
+                    src="{{ url_for('static', filename='images/headshot.jpg') }}"
+                    alt="{{ your_name }}"
+                    class="headshot rounded-lg"
+                    width="200"
+                    height="300"
+                    style="width: 200px; height: 300px; object-fit: cover;"
+                />
+            </a>
 
-  <body class="bg-light text-dark">
-    <!-- Здесь задана компактная ширина: max-width: 800px -->
-    <div class="container pt-5" style="max-width: 800px">
-      <!-- Шапка -->
-      <div class="d-flex flex-row align-items-center">
-        <a href="{{ url_for('home') }}">
-          <img
-            src="{{ url_for('static', filename='images/headshot.jpg') }}"
-            class="headshot shadow-sm"
-            alt="{{ your_name }}"
-            width="200"
-            height="300"
-            style="width: 200px; height: 300px; object-fit: cover;"
-          />
-        </a>
-        <!-- Обертка для имени и приветствия -->
-        <div class="p-3">
-          <div class="h1 mb-1">{{ your_name }}</div>
-          <p class="text-info mb-0">Добро пожаловать в мою цифровую обитель!</p>
-          <p>
-            Ведущий инженер-проектировщик и руководитель проектов в
-            строительстве. Специализируюсь на сложных конструктивных решениях,
-            прохождении государственной экспертизы и управлении технической
-            документацией.
-          </p>
+            <!-- Центральная колонка: имя + описание сверху, кнопки снизу -->
+            <div class="flex flex-col justify-between max-w-[400px]">
+                <div>
+                    <span class="font-mama text-xl font-bold text-gray-900 whitespace-nowrap">{{ your_name }}</span>
+                    <p class="text-sm text-gray-600 mt-1 max-w-[500px]">Ведущий инженер-проектировщик и руководитель проектов в строительстве. ПОС, СПОЗУ, БИМ/XML, автоматизация.</p>
+                </div>
+                <div class="flex gap-2 whitespace-nowrap">
+                    <a href="mailto:{{ email }}" target="_blank" rel="noopener noreferrer" class="btn-mama btn-mama-secondary text-xs px-3 py-1 border border-gray-300 bg-white whitespace-nowrap">Email me</a>
+                    <a href="{{ github }}" target="_blank" rel="noopener noreferrer" class="btn-mama btn-mama-secondary text-xs px-3 py-1 border border-gray-300 bg-white whitespace-nowrap">GitHub</a>
+                    <a href="{{ telegram }}" target="_blank" rel="noopener noreferrer" class="btn-mama btn-mama-secondary text-xs px-3 py-1 border border-gray-300 bg-white whitespace-nowrap">Telegram</a>
+                    <a href="{{ vk }}" target="_blank" rel="noopener noreferrer" class="btn-mama btn-mama-secondary text-xs px-3 py-1 border border-gray-300 bg-white whitespace-nowrap">VK</a>
+                    <a href="{{ twitter }}" target="_blank" rel="noopener noreferrer" class="btn-mama btn-mama-secondary text-xs px-3 py-1 border border-gray-300 bg-white whitespace-nowrap">X (Twitter)</a>
+                </div>
+            </div>
+
+            <!-- Правая колонка: меню и поиск -->
+            <div class="flex flex-col items-end gap-3" style="margin-left: auto">
+                <ul class="flex items-center gap-4 lg:gap-6">
+                    <li><a href="{{ url_for('resume') }}" class="text-gray-600 hover:text-blue-700 transition-colors font-mama text-sm">резюме</a></li>
+                    <li><a href="/projects/" class="text-gray-600 hover:text-blue-700 transition-colors font-mama text-sm">проекты</a></li>
+                </ul>
+                <form action="/blog/search" method="get" class="flex items-center gap-2">
+                    <input type="search" name="q" placeholder="Поиск…" class="border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full max-w-xs" />
+                </form>
+            </div>
+        </div>
+      </div>        </a>
+
+
+        </div>
         </div>
       </div>
+    </header>
 
-      <!-- Навигация -->
-      <nav class="navbar navbar-expand navbar-light border-bottom mb-4">
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbar"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbar">
-          <div class="navbar-nav ms-auto">
-            <a
-              href="{{ url_for('resume') }}"
-              class="nav-item nav-link"
-              id="resume"
-              >resume</a
-            >
-            <a href="/projects/" class="nav-item nav-link" id="projects"
-              >projects</a
-            >
+    <main class="flex-1 w-full">
+      <div class="content-wrapper-mama py-6 md:py-8 px-4 md:px-6">
+        {% block content %}{% endblock %}
+      </div>
+    </main>
+
+    <footer class="bg-gray-900 text-gray-300 py-8 mt-auto border-t border-gray-800">
+      <div class="content-wrapper-mama">
+        <div class="flex flex-col md:flex-row justify-between items-center gap-4 py-4">
+          <div class="text-center md:text-left">
+            <span class="font-mama text-xl font-bold text-white">{{ your_name }}</span>
+            <p class="text-xs text-gray-400 mt-1">Портфолио инженера-проектировщика · {{ current_year }}</p>
+          </div>
+          <div class="flex items-center gap-6 text-xs text-gray-400">
+            <a href="/contact/" class="hover:text-white transition-colors">Контакты</a>
           </div>
         </div>
-      </nav>
+      </div>
+    </footer>
 
-      <!-- Контент -->
-      <div>{% block content %}{% endblock %}</div>
-
-      <!-- Подвал -->
-      <small class="d-block mt-5 pb-4">
-        <div class="text-muted text-end">
-          {{ current_year }} © {{ your_name }}
-        </div>
-      </small>
-    </div>
-
-    <!-- Bootstrap 5.3.8 JS Bundle -->
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
-      crossorigin="anonymous"
-    ></script>
-
-    <script
-      type="text/javascript"
-      src="{{ url_for('static', filename='index.js') }}"
-    ></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='index.js') }}"></script>
   </body>
 </html>

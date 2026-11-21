@@ -1,43 +1,6 @@
-/* Минимальные стили для улучшения отображения Markdown контента */
-
-/* Улучшение для таблиц Bootstrap на маленьких экранах */
-@media screen and (max-width: 768px) {
-    .table {
-        font-size: 0.85em;
-    }
-    
-    /* Гарантируем, что таблицы не выходят за пределы на мобильных */
-    .table-responsive {
-        border: 1px solid #dee2e6;
-        border-radius: 0.25rem;
-    }
-}
-
-/* Улучшения для кода */
-pre {
-    padding: 1em;
-    overflow: auto;
-    background-color: #f8f9fa;
-    border-radius: 0.25rem;
-    max-width: 100%;
-}
-
-code {
-    padding: 0.2em 0.4em;
-    background-color: #f8f9fa;
-    border-radius: 0.25rem;
-    font-size: 85%;
-}
-
-/* Изображения */
-img {
-    max-width: 100%;
-    height: auto;
-}
+/* Минимальные стили — основное оформление перенесено в base.html (Tailwind + кастомные стили) */
 
 /* Аватар на главной — фиксированный размер 200x300 */
-img[alt*="Золотов"],
-img[alt*="your_name"],
 .headshot,
 img[src*="headshot"] {
     width: 200px !important;
@@ -47,44 +10,47 @@ img[src*="headshot"] {
     object-fit: cover;
 }
 
-/* Зачеркнутый текст */
-del {
-    text-decoration: line-through;
+/* Обёртка для таблиц в markdown */
+.table-responsive-mama {
+    overflow-x: auto;
+    margin: 1rem 0;
 }
 
-/* Гарантируем, что контент не выходит за пределы карточки */
-.card-body {
-    overflow-x: hidden;
+/* Стили для кнопки поделиться в резюме (если не подхватывается Tailwind) */
+#shareResume {
+    font-family: 'Arial Narrow', Arial, sans-serif;
 }
 
-/* Для очень длинных слов в таблицах */
-.table td {
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-}
-
+/* Улучшения для кода в markdown */
 pre {
     padding: 1em;
     overflow: auto;
-    background-color: #f8f9fa;
-    border-radius: 0.25rem;
+    background-color: #f1f5f9;
+    border-radius: 0.5rem;
     max-width: 100%;
 }
 
 code {
     padding: 0.2em 0.4em;
-    background-color: #f8f9fa;
+    background-color: #e2e8f0;
     border-radius: 0.25rem;
-    font-size: 85%;
-    word-wrap: break-word;
-    max-width: 100%;
+    font-size: 0.875em;
 }
 
-img {
-    max-width: 100%;
-    height: auto;
+pre code {
+    background: transparent;
+    padding: 0;
+    font-size: inherit;
 }
 
+/* Зачеркнутый текст */
 del {
     text-decoration: line-through;
+}
+
+/* Для очень длинных слов */
+.table-responsive-mama td,
+.table-responsive-mama th {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }

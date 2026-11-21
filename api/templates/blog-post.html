@@ -1,21 +1,28 @@
-{% extends "base.html" %} {% block title%}{{ post.title }}{% endblock%} {% block
-content%}
-<h1 class="text-secondary" align="">{{ post.title }}</h1>
+{% extends "base.html" %}
+{% block title %}{{ post.title }}{% endblock %}
+{% block content %}
 
-<p>
-  <a class="btn btn-primary" href="{{ url_for('posts') }}" role="button">Back</a>
-  <img
-    src="https://visitor-badge.laobi.icu/badge?page_id={{ url_for('post', name=post.path.replace('blogs/', '')) }}"
-    alt="Post visitor count" />
-</p>
+<div class="card-mama mb-8">
+  <h1 class="font-mama text-2xl font-bold mb-4 text-gray-900">{{ post.title }}</h1>
 
-{{ post.html|safe }}
+  <div class="flex items-center gap-4 mb-6">
+    <a href="{{ url_for('posts') }}" class="btn-mama btn-mama-secondary text-sm px-3 py-2">Назад</a>
+    <img src="https://visitor-badge.laobi.icu/badge?page_id={{ url_for('post', name=post.path.replace('blogs/', '')) }}"
+         alt="Post visitor count" class="h-6 w-auto" />
+  </div>
 
-{% if blog_comments %}<script
-  src="https://utteranc.es/client.js"
-  repo="{{ blog_comments }}"
-  issue-term="pathname"
-  theme="github-light"
-  crossorigin="anonymous"
-  async></script>{% endif %}
+  <div class="literary-text-mama">
+    {{ post.html | safe }}
+  </div>
+</div>
+
+{% if blog_comments %}
+<script src="https://utteranc.es/client.js"
+        repo="{{ blog_comments }}"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async></script>
+{% endif %}
+
 {% endblock %}

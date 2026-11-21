@@ -4,11 +4,13 @@ import configparser
 import os
 import markdown
 import re
+import yaml
 import traceback
 from datetime import datetime, timezone
 from functools import lru_cache
 from pathlib import Path
 from flask import Flask, Response, redirect, render_template, request, url_for
+from markupsafe import Markup
 from flask_flatpages import FlatPages
 from flask_frozen import Freezer
 
@@ -327,6 +329,10 @@ def create_app() -> Flask:
     def about():
         return render_template("about.html")
 
+    @app.get("/contact/")
+    def contact():
+        return render_template("contact.html")
+
 
     @app.get("/resume")
     def resume():
@@ -514,7 +520,7 @@ def create_app() -> Flask:
                 "obsidian-note.html",
                 title=title,
                 date=metadata.get("date", ""),
-                body=html_body,
+                body=Markup(html_body),
                 path=path,
             )
         except Exception as e:
@@ -578,6 +584,14 @@ def search_posts(query: str):
     return [
         page for page in published_posts(flatpages) if lowered in page.body.casefold()
     ]
+
+
+MARKDOWN_EXTENSIONS = ['extra', 'sane_lists', 'nl2br', 'tables', 'fenced_code']
+
+
+def render_markdown(text: str) -> str:
+    """Рендерит markdown в HTML."""
+    return markdown.markdown(text, extensions=MARKDOWN_EXTENSIONS)
 
 
 def get_latest_posts(limit: int = 10):

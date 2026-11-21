@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Контакты{% endblock %}
+{% block content %}
+
+<div class="card-mama mb-8">
+  <h1 class="font-mama text-2xl font-bold mb-4 text-gray-900">Контакты</h1>
+  <p class="text-base text-gray-700 leading-relaxed mb-6">
+    Связаться со мной можно любым удобным способом:
+  </p>
+
+  <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+    <div class="border border-gray-200 rounded-lg p-4 hover:border-blue-300 hover:shadow-md transition-all">
+      <h3 class="font-mama text-lg font-bold mb-1 text-gray-900">Email</h3>
+      <a href="mailto:{{ email }}" class="text-blue-700 hover:text-blue-600 hover:underline font-medium">{{ email }}</a>
+    </div>
+    <div class="border border-gray-200 rounded-lg p-4 hover:border-blue-300 hover:shadow-md transition-all">
+      <h3 class="font-mama text-lg font-bold mb-1 text-gray-900">GitHub</h3>
+      <a href="{{ github }}" target="_blank" rel="noopener noreferrer" class="text-blue-700 hover:text-blue-600 hover:underline font-medium">{{ github }}</a>
+    </div>
+    <div class="border border-gray-200 rounded-lg p-4 hover:border-blue-300 hover:shadow-md transition-all">
+      <h3 class="font-mama text-lg font-bold mb-1 text-gray-900">Telegram</h3>
+      <a href="{{ telegram }}" target="_blank" rel="noopener noreferrer" class="text-blue-700 hover:text-blue-600 hover:underline font-medium">{{ telegram }}</a>
+    </div>
+    <div class="border border-gray-200 rounded-lg p-4 hover:border-blue-300 hover:shadow-md transition-all">
+      <h3 class="font-mama text-lg font-bold mb-1 text-gray-900">VK</h3>
+      <a href="{{ vk }}" target="_blank" rel="noopener noreferrer" class="text-blue-700 hover:text-blue-600 hover:underline font-medium">{{ vk }}</a>
+    </div>
+    <div class="border border-gray-200 rounded-lg p-4 hover:border-blue-300 hover:shadow-md transition-all">
+      <h3 class="font-mama text-lg font-bold mb-1 text-gray-900">X (Twitter)</h3>
+      <a href="{{ twitter }}" target="_blank" rel="noopener noreferrer" class="text-blue-700 hover:text-blue-600 hover:underline font-medium">{{ twitter }}</a>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

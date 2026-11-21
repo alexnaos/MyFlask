@@ -1,45 +1,42 @@
 {% extends "base.html" %}
 {% block title %}Резюме{% endblock %}
 {% block content %}
-<div class="card mt-4 shadow-sm">
-  <!-- Шапка карточки: убрали bg-dark и text-white, оставили светлый фон -->
-  <div class="card-header bg-light p-0 border-bottom d-flex justify-content-between align-items-center">
-    <ul class="nav nav-tabs card-header-tabs m-0 mb-0" id="resumeTabs" role="tablist">
+
+<div class="card-mama mb-8">
+  <!-- Шапка карточки с вкладками -->
+  <div class="mb-4 border-b border-gray-200">
+    <ul class="flex gap-8 border-b border-gray-200 mb-4" id="resumeTabs" role="tablist">
       {% for key, info in resumes_info.items() %}
-      <li class="nav-item" role="presentation">
-        <button class="nav-link {% if key == active_tab %}active{% endif %}" 
-                id="tab-{{ key }}" 
-                data-bs-toggle="tab" 
-                data-bs-target="#content-{{ key }}" 
-                type="button" 
-                role="tab" 
-                aria-controls="content-{{ key }}" 
+      <li role="presentation">
+        <button class="nav-link {% if key == active_tab %}text-blue-700 border-b-2 border-blue-700 font-bold pb-2{% else %}text-gray-500 hover:text-gray-700 pb-2 border-b-2 border-transparent{% endif %}"
+                id="tab-{{ key }}"
+                data-bs-toggle="tab"
+                data-bs-target="#content-{{ key }}"
+                type="button"
+                role="tab"
+                aria-controls="content-{{ key }}"
                 aria-selected="{% if key == active_tab %}true{% else %}false{% endif %}">
           {{ info.title }}
         </button>
       </li>
       {% endfor %}
     </ul>
-    <button class="btn btn-outline-secondary btn-sm ms-3" id="shareResume" title="Поделиться резюме">
-      <i class="fa fa-share-alt"></i>
+    <button id="shareResume" class="btn-mama btn-mama-secondary text-xs px-2 py-1" title="Поделиться резюме">
+      Поделиться
     </button>
   </div>
-  
-  <!-- card-body в Bootstrap по умолчанию белый, стиль background-color убран за ненадобностью -->
-  <div class="card-body">
-    <div class="tab-content" id="resumeTabsContent">
-      {% for key, html_content in resumes.items() %}
-      <div class="tab-pane fade {% if key == active_tab %}show active{% endif %}" 
-           id="content-{{ key }}" 
-           role="tabpanel" 
-           aria-labelledby="tab-{{ key }}">
-        <!-- Заменили инлайн-стили на класс fs-5 (чуть крупнее текст) -->
-        <div class="fs-5 lh-base">
-          {{ html_content | safe }}
-        </div>
+
+  <div id="resumeTabsContent">
+    {% for key, html_content in resumes.items() %}
+    <div class="tab-pane {% if key == active_tab %}block{% else %}hidden{% endif %}"
+         id="content-{{ key }}"
+         role="tabpanel"
+         aria-labelledby="tab-{{ key }}">
+      <div class="literary-text-mama">
+        {{ html_content | safe }}
       </div>
-      {% endfor %}
     </div>
+    {% endfor %}
   </div>
 </div>
 
@@ -53,15 +50,12 @@
       try {
         if (navigator.share) {
           await navigator.share({ title, text: title, url });
+          btn.innerText = 'Поделились';
+          setTimeout(function() { btn.innerText = 'Поделиться'; }, 2000);
         } else {
           await navigator.clipboard.writeText(url);
-          const original = btn.innerHTML;
-          btn.innerHTML = '<i class="fa fa-check"></i> Скопировано';
-          btn.classList.replace('btn-outline-secondary', 'btn-success');
-          setTimeout(() => {
-            btn.innerHTML = original;
-            btn.classList.replace('btn-success', 'btn-outline-secondary');
-          }, 2000);
+          btn.innerText = 'Скопировано';
+          setTimeout(function() { btn.innerText = 'Поделиться'; }, 2000);
         }
       } catch (e) {
         console.error('Share failed', e);
@@ -69,4 +63,5 @@
     });
   })();
 </script>
+
 {% endblock %}
