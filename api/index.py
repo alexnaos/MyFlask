@@ -45,10 +45,6 @@ try:
         ):
             OBSIDIAN_VAULT = config_parser.get("configs", "obsidian_vault").strip()
             OBSIDIAN_VAULT = OBSIDIAN_VAULT.strip('"').strip("'")
-        if config_parser.has_section("configs"):
-            _publish_key = config_parser.get("configs", "obsidian_publish_key", fallback="").strip()
-            if _publish_key:
-                OBSIDIAN_PUBLISH_KEY = _publish_key
 except Exception:
     traceback.print_exc()
 # MYFLASK_CONTENT_DIR (переменная окружения) имеет приоритет; затем — config.ini;
@@ -61,114 +57,16 @@ OBSIDIAN_VAULT = os.environ.get("MYFLASK_CONTENT_DIR", OBSIDIAN_VAULT or "/data/
 # Пример front matter в заметке: publish: true
 OBSIDIAN_PUBLISH_KEY = "publish"
 
-
-def _scan_obsidian_vault(vault_path: str) -> list[dict]:
-    """Scan the Obsidian vault directory and return a list of note info dicts.
-    Each dict contains: title, date, path
-    Only scans .md files at the top level (excluding .obsidian, system dirs).
-    """
-    notes = []
-    vault = Path(vault_path)
-
-    if not vault.exists():
-        return notes
-
-    # System directories to exclude
-    excluded_dirs = {".obsidian", "esp32", "Google Keep", "Пенс"}
-
-    try:
-        for item in vault.iterdir():
-            # Only process files, skip directories and system dirs
-            if item.is_dir():
-                # Skip excluded system directories
-                if item.name in excluded_dirs:
-                    continue
-                # Recursively scan subdirectories but limit depth
-                for sub_item in item.rglob("*.md"):
-                    try:
-                        metadata, body = _read_markdown_file(sub_item)
-                        # Build relative path from vault
-                        rel_path = sub_item.relative_to(vault)
-                        notes.append(
-                            {
-                                "title": metadata.get(
-                                    "title", os.path.splitext(sub_item.name)[0]
-                                ),
-                                "date": metadata.get("date", ""),
-                                "path": str(rel_path),
-                                "filepath": str(sub_item),
-                            }
-                        )
-                    except Exception as e:
-                        # Fallback: use filename as title and mtime as date
-                        try:
-                            mtime = os.path.getmtime(sub_item)
-                            date_str = datetime.fromtimestamp(
-                                mtime, tz=timezone.utc
-                            ).strftime("%d.%m.%Y %H:%M")
-                            title = os.path.splitext(sub_item.name)[0]
-                            rel_path = sub_item.relative_to(vault)
-                            notes.append(
-                                {
-                                    "title": title,
-                                    "date": date_str,
-                                    "path": str(rel_path),
-                                    "filepath": str(sub_item),
-                                }
-                            )
-                        except Exception:
-                            pass
-            elif (
-                item.is_file()
-                and item.suffix == ".md"
-                and item.name not in excluded_dirs
-            ):
-                # Top-level .md files
-                try:
-                    metadata, body = _read_markdown_file(item)
-                    rel_path = item.relative_to(vault)
-                    notes.append(
-                        {
-                            "title": metadata.get(
-                                "title", os.path.splitext(item.name)[0]
-                            ),
-                            "date": metadata.get("date", ""),
-                            "path": str(rel_path),
-                            "filepath": str(item),
-                        }
-                    )
-                except Exception as e:
-                    # Fallback: use filename as title and mtime as date
-                    try:
-                        mtime = os.path.getmtime(item)
-                        date_str = datetime.fromtimestamp(
-                            mtime, tz=timezone.utc
-                        ).strftime("%d.%m.%Y %H:%M")
-                        title = os.path.splitext(item.name)[0]
-                        rel_path = item.relative_to(vault)
-                        notes.append(
-                            {
-                                "title": title,
-                                "date": date_str,
-                                "path": str(rel_path),
-                                "filepath": str(item),
-                            }
-                        )
-                    except Exception:
-                        pass
-    except Exception as e:
-        traceback.print_exc()
-
-    # Sort by date descending (newest first), treating empty dates as oldest
-    def sort_key(note):
-        d = note.get("date", "")
-        try:
-            return datetime.strptime(d, "%Y-%m-%d") if d else datetime.min
-        except ValueError:
-            return datetime.min
-
-    notes.sort(key=sort_key, reverse=True)
-    return notes
+try:
+    config_parser = configparser.ConfigParser()
+    config_file = Path(BASE_DIR) / "config.ini"
+    if config_parser.read(str(config_file), encoding="utf-8"):
+        if config_parser.has_section("configs"):
+            _publish_key = config_parser.get("configs", "obsidian_publish_key", fallback="").strip()
+            if _publish_key:
+                OBSIDIAN_PUBLISH_KEY = _publish_key
+except Exception:
+    traceback.print_exc()
 
 
 def _is_truthy(value: str | None) -> bool:
