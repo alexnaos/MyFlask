@@ -35,6 +35,18 @@ img {
     height: auto;
 }
 
+/* Аватар на главной — фиксированный размер 200x300 */
+img[alt*="Золотов"],
+img[alt*="your_name"],
+.headshot,
+img[src*="headshot"] {
+    width: 200px !important;
+    height: 300px !important;
+    min-width: 200px;
+    min-height: 300px;
+    object-fit: cover;
+}
+
 /* Зачеркнутый текст */
 del {
     text-decoration: line-through;

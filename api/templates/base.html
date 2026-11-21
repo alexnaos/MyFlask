@@ -63,10 +63,11 @@
         <a href="{{ url_for('home') }}">
           <img
             src="{{ url_for('static', filename='images/headshot.jpg') }}"
-            class="img-thumbnail shadow-sm"
+            class="headshot shadow-sm"
             alt="{{ your_name }}"
-            width="220"
-            height="220"
+            width="200"
+            height="300"
+            style="width: 200px; height: 300px; object-fit: cover;"
           />
         </a>
         <!-- Обертка для имени и приветствия -->
